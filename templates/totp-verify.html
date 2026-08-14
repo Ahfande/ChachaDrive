@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verifikasi 2FA - SecureCloud</title>
+    
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Link CSS -->
+    <link rel="stylesheet" href="/static/css/totp.css">
+</head>
+<body>
+    
+    <!-- Background -->
+    <div class="bg-animation">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
+        <div class="circle circle-4"></div>
+        <div class="circle circle-5"></div>
+    </div>
+
+    <div class="container">
+        
+        <!-- Kotak Verifikasi -->
+        <div class="totp-box verify-box">
+            
+            <!-- Dekorasi sudut -->
+            <div class="corner-deco corner-tl"></div>
+            <div class="corner-deco corner-tr"></div>
+            <div class="corner-deco corner-bl"></div>
+            <div class="corner-deco corner-br"></div>
+            
+            <!-- Badge -->
+            <div class="security-badge">
+                <i class="fas fa-shield-alt"></i>
+                <span>Verifikasi Keamanan</span>
+            </div>
+            
+            <!-- Icon -->
+            <div class="totp-icon-wrapper">
+                <div class="totp-icon">
+                    <i class="fa-solid fa-mobile-screen"></i>
+                </div>
+                <div class="icon-ring"></div>
+            </div>
+            
+            <!-- Judul -->
+            <h2 class="totp-title">Verifikasi TOTP</h2>
+            <p class="totp-subtitle">
+                Masukkan kode verifikasi dari aplikasi autentikator Anda
+                <br>
+                <small class="user-email" id="userEmail">user@secure.com</small>
+            </p>
+            
+            <!-- Timer -->
+            <div class="timer-container">
+                <div class="timer-circle" id="timerCircle">
+                    <svg viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="45" class="timer-bg"/>
+                        <circle cx="50" cy="50" r="45" class="timer-progress" id="timerProgress"/>
+                    </svg>
+                    <span class="timer-text" id="timerText">30</span>
+                </div>
+                <p class="timer-label">Kode berlaku selama</p>
+            </div>
+            
+            <form id="totpVerifyForm" onsubmit="handleTOTPVerify(event)">
+                <div class="form-group">
+                    <label for="totpTokenVerify" class="form-label">
+                        <i class="fas fa-key"></i> Kode Verifikasi (6 digit)
+                    </label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-key input-icon"></i>
+                        <input 
+                            type="text" 
+                            id="totpTokenVerify" 
+                            class="form-control totp-input" 
+                            placeholder="000000"
+                            maxlength="6"
+                            inputmode="numeric"
+                            pattern="[0-9]{6}"
+                            required
+                            autocomplete="one-time-code"
+                            autofocus
+                        >
+                    </div>
+                    <div class="form-error" id="totpVerifyError"></div>
+                </div>
+                
+                <button type="submit" class="btn-totp" id="totpVerifyBtn">
+                    <span class="btn-content" id="btnContent">
+                        <span class="btn-text" id="btnText">Verifikasi</span>
+                        <i class="fas fa-arrow-right btn-icon"></i>
+                    </span>
+                    <span class="spinner" id="btnSpinner" style="display: none;"></span>
+                </button>
+            </form>
+            
+            <!-- Link Bantuan -->
+            <div class="help-links">
+                <a href="#" class="help-link">
+                    <i class="fas fa-question-circle"></i> Kehilangan akses ke aplikasi autentikator?
+                </a>
+            </div>
+            
+        </div>
+        
+    </div>
+    
+    <!-- Alert Container -->
+    <div id="alertContainer"></div>
+    
+    <script src="/static/js/totp.js"></script>
+    
+</body>
+</html>

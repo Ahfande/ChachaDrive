@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Cloud Storage</title>
+
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome untuk ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Link CSS -->
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+<body>
+
+    <!-- Background dengan animasi partikel -->
+    <div class="bg-animation">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
+        <div class="circle circle-4"></div>
+        <div class="circle circle-5"></div>
+    </div>
+
+    <div class="app-shell">
+
+        <!-- ============================================
+             SIDEBAR
+        ============================================ -->
+        <aside class="sidebar" id="sidebar">
+
+            <div class="sidebar-brand">
+                <div class="brand-icon"><i class="fas fa-cloud"></i></div>
+                <span class="brand-text">Cloud Storage</span>
+            </div>
+
+            <button class="btn-upload" id="btnUpload">
+                <i class="fas fa-plus"></i>
+                <span>Unggah File</span>
+            </button>
+            <input type="file" id="fileInput" multiple hidden>
+
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-filter="all">
+                    <i class="fas fa-folder"></i> Semua File
+                </a>
+                <a href="#" class="nav-item" data-filter="image">
+                    <i class="fas fa-image"></i> Gambar
+                </a>
+                <a href="#" class="nav-item" data-filter="document">
+                    <i class="fas fa-file-alt"></i> Dokumen
+                </a>
+                <a href="#" class="nav-item" data-filter="other">
+                    <i class="fas fa-shapes"></i> Lainnya
+                </a>
+            </nav>
+
+            <div class="sidebar-security">
+                <div class="security-badge sidebar-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>ChaCha20-Poly1305</span>
+                </div>
+                <p class="security-note">Setiap file dienkripsi di perangkat Anda sebelum diunggah ke penyimpanan cloud.</p>
+            </div>
+
+            <div class="storage-widget">
+                <div class="storage-header">
+                    <span>Penyimpanan</span>
+                    <span id="storageText">0 MB / 1 GB</span>
+                </div>
+                <div class="storage-bar">
+                    <div class="storage-fill" id="storageFill"></div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Overlay untuk sidebar mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- ============================================
+             MAIN
+        ============================================ -->
+        <div class="main">
+
+            <!-- TOPBAR -->
+            <header class="topbar">
+                <button class="btn-icon-round" id="btnMenu" aria-label="Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <div class="search-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="searchInput" class="search-input" placeholder="Cari file terenkripsi Anda...">
+                </div>
+
+                <div class="topbar-right">
+                    <div class="user-menu" id="userMenu">
+                        <button class="user-trigger" id="userTrigger">
+                            <span class="user-avatar" id="userAvatar">U</span>
+                            <span class="user-name" id="userNameLabel">Pengguna</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="user-dropdown" id="userDropdown">
+                            <div class="dropdown-header">
+                                <span class="user-avatar big" id="userAvatarBig">U</span>
+                                <div>
+                                    <div class="dropdown-name" id="dropdownName">Pengguna</div>
+                                    <div class="dropdown-email" id="dropdownEmail">user@secure.com</div>
+                                </div>
+                            </div>
+                            <a href="#" class="dropdown-item" id="btnLogout">
+                                <i class="fas fa-sign-out-alt"></i> Keluar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- CONTENT -->
+            <main class="content">
+
+                <!-- Dropzone (drag & drop area) -->
+                <div class="dropzone" id="dropzone">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p><strong>Seret &amp; letakkan file di sini</strong> atau klik tombol Unggah File</p>
+                    <span>File akan dienkripsi secara otomatis menggunakan ChaCha20-Poly1305 sebelum disimpan</span>
+                </div>
+
+                <div class="content-toolbar">
+                    <div class="toolbar-left">
+                        <h1 class="content-title" id="contentTitle">Semua File</h1>
+                        <span class="file-count" id="fileCount">0 item</span>
+                    </div>
+                    <div class="toolbar-right">
+                        <select class="sort-select" id="sortSelect">
+                            <option value="date_desc">Terbaru</option>
+                            <option value="date_asc">Terlama</option>
+                            <option value="name_asc">Nama A-Z</option>
+                            <option value="name_desc">Nama Z-A</option>
+                            <option value="size_desc">Ukuran Terbesar</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Upload queue (progress list) -->
+                <div class="upload-queue" id="uploadQueue"></div>
+
+                <!-- Grid file -->
+                <div class="file-grid" id="fileGrid"></div>
+
+                <!-- Empty state -->
+                <div class="empty-state" id="emptyState" style="display:none;">
+                    <div class="empty-icon"><i class="fas fa-folder-open"></i></div>
+                    <h3>Belum ada file</h3>
+                    <p>Unggah file pertama Anda. File akan otomatis dienkripsi dengan ChaCha20-Poly1305 sebelum disimpan.</p>
+                    <button class="btn-upload" id="btnUploadEmpty">
+                        <i class="fas fa-plus"></i><span>Unggah File</span>
+                    </button>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- ============================================
+         MODAL: PREVIEW FILE
+    ============================================ -->
+    <div class="modal-overlay" id="previewModal">
+        <div class="modal modal-preview">
+            <div class="modal-header">
+                <div class="modal-title-group">
+                    <i class="fas fa-lock modal-lock-icon"></i>
+                    <span class="modal-title" id="previewTitle">Nama File</span>
+                </div>
+                <button class="modal-close" data-close="previewModal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body preview-body" id="previewBody">
+                <div class="decrypting-state">
+                    <div class="spinner spinner-dark"></div>
+                    <span>Mendekripsi file...</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <span class="preview-meta" id="previewMeta"></span>
+                <div class="modal-footer-actions">
+                    <button class="btn-secondary" id="previewDownloadBtn"><i class="fas fa-download"></i> Unduh</button>
+                    <button class="btn-secondary" id="previewEditBtn"><i class="fas fa-pen"></i> Edit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         MODAL: EDIT TEXT FILE
+    ============================================ -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal modal-edit">
+            <div class="modal-header">
+                <div class="modal-title-group">
+                    <i class="fas fa-pen modal-lock-icon"></i>
+                    <span class="modal-title" id="editTitle">Edit File</span>
+                </div>
+                <button class="modal-close" data-close="editModal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <textarea class="edit-textarea" id="editTextarea" spellcheck="false"></textarea>
+            </div>
+            <div class="modal-footer">
+                <span class="preview-meta">Perubahan akan dienkripsi ulang dengan nonce baru saat disimpan</span>
+                <div class="modal-footer-actions">
+                    <button class="btn-secondary" data-close="editModal">Batal</button>
+                    <button class="btn-primary" id="saveEditBtn"><i class="fas fa-save"></i> Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         MODAL: RENAME FILE
+    ============================================ -->
+    <div class="modal-overlay" id="renameModal">
+        <div class="modal modal-small">
+            <div class="modal-header">
+                <div class="modal-title-group">
+                    <i class="fas fa-i-cursor modal-lock-icon"></i>
+                    <span class="modal-title">Ganti Nama File</span>
+                </div>
+                <button class="modal-close" data-close="renameModal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" for="renameInput">Nama Baru</label>
+                    <input type="text" id="renameInput" class="form-control-flat">
+                    <div class="form-error" id="renameError"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <span></span>
+                <div class="modal-footer-actions">
+                    <button class="btn-secondary" data-close="renameModal">Batal</button>
+                    <button class="btn-primary" id="saveRenameBtn"><i class="fas fa-check"></i> Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         MODAL: KONFIRMASI HAPUS
+    ============================================ -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal modal-small">
+            <div class="modal-body confirm-body">
+                <div class="confirm-icon"><i class="fas fa-trash-alt"></i></div>
+                <h3>Hapus file ini?</h3>
+                <p>File <strong id="deleteFileName">-</strong> akan dihapus permanen dari penyimpanan cloud Anda. Tindakan ini tidak dapat dibatalkan.</p>
+            </div>
+            <div class="modal-footer">
+                <span></span>
+                <div class="modal-footer-actions">
+                    <button class="btn-secondary" data-close="deleteModal">Batal</button>
+                    <button class="btn-danger" id="confirmDeleteBtn"><i class="fas fa-trash-alt"></i> Hapus</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- File card template -->
+<!-- File card template - GDrive Style -->
+<template id="fileCardTemplate">
+    <div class="file-card" draggable="false">
+        <div class="file-cover">
+            <!-- Skeleton loader -->
+            <div class="thumbnail-skeleton"></div>
+            
+            <!-- Thumbnail Image -->
+            <img class="cover-img hidden" alt="thumbnail">
+            
+            <!-- Fallback Icon -->
+            <div class="cover-icon-wrap">
+                <i class="fas fa-file file-icon-big"></i>
+                <span class="file-ext-badge">FILE</span>
+            </div>
+            
+            <!-- Lock badge -->
+            <span class="lock-chip"><i class="fas fa-lock"></i></span>
+            
+            <!-- More button -->
+            <button class="card-menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+            
+            <!-- Dropdown menu -->
+            <div class="card-menu">
+                <button data-action="preview"><i class="fas fa-eye"></i> Lihat</button>
+                <button data-action="download"><i class="fas fa-download"></i> Unduh</button>
+                <button data-action="edit"><i class="fas fa-pen"></i> Edit</button>
+                <button data-action="rename"><i class="fas fa-i-cursor"></i> Ganti Nama</button>
+                <button data-action="delete" class="danger"><i class="fas fa-trash-alt"></i> Hapus</button>
+            </div>
+        </div>
+        <div class="file-info">
+            <p class="file-name" title=""></p>
+            <p class="file-meta">
+                <span class="file-size"></span>
+                <span class="dot">•</span>
+                <span class="file-date"></span>
+            </p>
+        </div>
+    </div>
+</template>
+
+    <!-- Alert Container -->
+    <div id="alertContainer"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="/static/js/chacha20poly1305.js"></script>
+    <script src="/static/js/dashboard.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar - SecureCloud</title>
+
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Link CSS -->
+    <link rel="stylesheet" href="/static/css/register.css">
+</head>
+
+<body>
+
+    <!-- Background dengan animasi partikel -->
+    <div class="bg-animation">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
+        <div class="circle circle-4"></div>
+        <div class="circle circle-5"></div>
+    </div>
+
+    <!-- Container Utama -->
+    <div class="container">
+
+        <!-- Kotak Register -->
+        <div class="register-box">
+
+            <!-- Dekorasi sudut -->
+            <div class="corner-deco corner-tl"></div>
+            <div class="corner-deco corner-tr"></div>
+            <div class="corner-deco corner-bl"></div>
+            <div class="corner-deco corner-br"></div>
+
+            <!-- Badge keamanan -->
+            <div class="security-badge">
+                <i class="fas fa-shield-alt"></i>
+                <span>Enkripsi ChaCha20-Poly1305</span>
+            </div>
+
+            <!-- Icon -->
+            <div class="register-icon-wrapper">
+                <div class="register-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <div class="icon-ring"></div>
+            </div>
+
+            <!-- Judul -->
+            <h2 class="register-title">Buat Akun Baru</h2>
+            <p class="register-subtitle">Daftar ke SecureCloud dan mulai menyimpan data dengan aman</p>
+
+            <!-- register.html - bagian form -->
+            <form method="POST" id="registerForm">
+                <!-- {% csrf_token %} -->
+
+                <!-- Username -->
+                <div class="form-group">
+                    <label for="id_username" class="form-label">
+                        <i class="fas fa-user-tag"></i> Username
+                    </label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user-tag input-icon"></i>
+                        <input type="text" id="id_username" name="username" class="form-control"
+                            placeholder="Masukkan username" required>
+                    </div>
+                    <div class="form-error" id="usernameError"></div>
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label for="id_email" class="form-label">
+                        <i class="fas fa-envelope"></i> Email
+                    </label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" id="id_email" name="email" class="form-control" placeholder="Masukkan email"
+                            required>
+                    </div>
+                    <div class="form-error" id="emailError"></div>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label for="id_password1" class="form-label">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="id_password1" name="password1" class="form-control"
+                            placeholder="Minimal 8 karakter" required>
+                        <button type="button" class="toggle-password" id="togglePassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="form-error" id="passwordError"></div>
+                    <div class="password-strength" id="passwordStrength" style="display: none;">
+                        <div class="strength-bar">
+                            <div class="strength-fill" id="strengthFill"></div>
+                        </div>
+                        <span class="strength-text" id="strengthText">Kekuatan password</span>
+                    </div>
+                </div>
+
+                <!-- Konfirmasi Password -->
+                <div class="form-group">
+                    <label for="id_password2" class="form-label">
+                        <i class="fas fa-check-circle"></i> Konfirmasi Password
+                    </label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-check-circle input-icon"></i>
+                        <input type="password" id="id_password2" name="password2" class="form-control"
+                            placeholder="Ulangi password" required>
+                    </div>
+                    <div class="form-error" id="passwordConfirmError"></div>
+                </div>
+
+                <!-- Terms -->
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="agreeTerms" required>
+                        <span class="custom-checkbox">
+                            <i class="fas fa-check"></i>
+                        </span>
+                        Saya setuju dengan <a href="#" class="terms-link">Syarat & Ketentuan</a>
+                    </label>
+                </div>
+
+                <!-- Tombol Daftar -->
+                <button type="submit" class="btn-register" id="registerBtn">
+                    <span class="btn-content" id="btnContent">
+                        <span class="btn-text" id="btnText">Daftar</span>
+                        <i class="fas fa-arrow-right btn-icon"></i>
+                    </span>
+                    <span class="spinner" id="btnSpinner" style="display: none;"></span>
+                </button>
+            </form>
+
+            <!-- Divider -->
+            <div class="divider">
+                <span>atau</span>
+            </div>
+
+            <!-- Link Login -->
+            <p class="login-link">
+                Sudah punya akun? <a href="/login/">Login <i class="fas fa-arrow-right"></i></a>
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- Alert Container -->
+    <div id="alertContainer"></div>
+
+    <script src="/static/js/register.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aktivasi Autentikasi Dua Faktor (2FA)</title>
+
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Link CSS -->
+    <link rel="stylesheet" href="/static/css/totp.css">
+</head>
+
+<body>
+
+    <!-- Background -->
+    <div class="bg-animation">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
+        <div class="circle circle-4"></div>
+        <div class="circle circle-5"></div>
+    </div>
+
+    <div class="container">
+
+        <!-- Kotak Setup 2FA -->
+        <div class="totp-box">
+
+            <!-- Dekorasi sudut -->
+            <div class="corner-deco corner-tl"></div>
+            <div class="corner-deco corner-tr"></div>
+            <div class="corner-deco corner-bl"></div>
+            <div class="corner-deco corner-br"></div>
+
+            <!-- Badge -->
+            <div class="security-badge">
+                <i class="fas fa-shield-alt"></i>
+                <span>Autentikasi Dua Faktor</span>
+            </div>
+
+            <!-- Icon -->
+            <div class="totp-icon-wrapper">
+                <div class="totp-icon">
+                    <i class="fas fa-qrcode"></i>
+                </div>
+                <div class="icon-ring"></div>
+            </div>
+
+            <!-- Judul -->
+            <h2 class="totp-title">Aktivasi Verifikasi TOTP</h2>
+            <p class="totp-subtitle">Aktifkan autentikasi dua faktor (2FA) untuk memberikan lapisan keamanan tambahan
+                pada akun Anda.</p>
+
+            <!-- Step 1: Scan QR Code -->
+            <div class="qr-container">
+                <div class="qr-code" id="qrCodeContainer">
+                    <img id="qrCodeImg" src="" alt="QR Code" style="display: none;">
+                    <div class="qr-placeholder" id="qrPlaceholder">
+                        <i class="fas fa-qrcode"></i>
+                        <span>Memuat QR Code...</span>
+                    </div>
+                </div>
+                <div class="secret-key">
+                    <label>Kode Rahasia</label>
+                    <div class="secret-value">
+                        <span id="secretKey">XXXXXXXXXXXXXX</span>
+                        <button class="copy-btn" onclick="copySecret()" title="Salin kode">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                    <small>Simpan kode ini di tempat aman sebagai cadangan</small>
+                </div>
+            </div>
+
+            <!-- Form Verifikasi -->
+            <form id="totpForm">
+                <div class="form-group">
+                    <label for="totpToken" class="form-label">
+                        <i class="fas fa-key"></i> Kode Verifikasi
+                    </label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-key input-icon"></i>
+                        <input type="text" id="totpToken" class="form-control totp-input" placeholder="000000"
+                            maxlength="6" inputmode="numeric" pattern="[0-9]{6}" required autocomplete="one-time-code">
+                    </div>
+                    <div class="form-error" id="totpError"></div>
+                </div>
+
+                <button type="submit" class="btn-totp" id="totpBtn">
+                    <span class="btn-content" id="btnContent">
+                        <span class="btn-text" id="btnText">Verifikasi & Aktifkan</span>
+                        <i class="fas fa-check-circle btn-icon"></i>
+                    </span>
+                    <span class="spinner" id="btnSpinner" style="display: none;"></span>
+                </button>
+            </form>
+
+            <!-- Info Penting -->
+            <div class="important-info">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                    <strong>Penting!</strong>
+                    <p>Simpan Secret Key ini sebagai cadangan apabila QR Code tidak dapat dipindai atau saat perlu
+                        mengonfigurasi ulang aplikasi autentikator.</p>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="divider">
+                <span>atau</span>
+            </div>
+
+            <!-- Link Kembali -->
+            <p class="back-link">
+                <a href="/dashboard/"><i class="fas fa-arrow-left"></i> Kembali ke Dashboard</a>
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- Alert Container -->
+    <div id="alertContainer"></div>
+
+    <script src="/static/js/totp.js"></script>
+
+</body>
+
+</html>
