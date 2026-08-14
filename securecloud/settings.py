@@ -16,7 +16,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ============================================
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-secure-cloud-skripsi-2026')
 DEBUG = True
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com', '.railway.app']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.railway.app']
 
 # ============================================
 # APLIKASI
@@ -100,6 +100,7 @@ USE_TZ = True
 # ============================================
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
