@@ -56,7 +56,7 @@ const ownerEmail = currentUser.email;
     // Gunakan host yang SAMA dengan halaman saat ini agar cookie session
     // (SESSION_COOKIE_SAMESITE = 'Lax') tidak diblokir browser sebagai
     // request cross-site (localhost vs 127.0.0.1 dianggap origin berbeda).
-    const API_BASE_URL = window.location.protocol + '//' + window.location.hostname + ':8000/api';
+    const API_BASE_URL = window.location.origin + '/api';
     const QUOTA_BYTES = 1024 * 1024 * 1024;
 
     const IMAGE_EXT = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'bmp'];
