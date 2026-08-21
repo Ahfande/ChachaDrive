@@ -20,9 +20,6 @@
     <div class="bg-animation">
         <div class="circle circle-1"></div>
         <div class="circle circle-2"></div>
-        <div class="circle circle-3"></div>
-        <div class="circle circle-4"></div>
-        <div class="circle circle-5"></div>
     </div>
 
     <!-- Container Utama -->
@@ -30,12 +27,6 @@
         
         <!-- Kotak Login dengan efek glass -->
         <div class="login-box glass-effect">
-            
-            <!-- Dekorasi sudut -->
-            <div class="corner-deco corner-tl"></div>
-            <div class="corner-deco corner-tr"></div>
-            <div class="corner-deco corner-bl"></div>
-            <div class="corner-deco corner-br"></div>
             
             <!-- Badge keamanan -->
             <div class="security-badge">
@@ -108,7 +99,7 @@
                         </span>
                         Ingat Saya
                     </label>
-                    <a href="#" class="forgot-link">
+                    <a href="#" class="forgot-link" id="forgotLink">
                         <i class="fas fa-key"></i> Lupa Password?
                     </a>
                 </div>
@@ -140,7 +131,42 @@
     
     <!-- Alert Container -->
     <div id="alertContainer"></div>
-    
+
+    <!-- ============================================
+         MODAL: LUPA PASSWORD
+    ============================================ -->
+    <div class="modal-overlay" id="forgotModal">
+        <div class="modal modal-small">
+            <div class="modal-header">
+                <div class="modal-title-group">
+                    <i class="fas fa-key modal-lock-icon"></i>
+                    <span class="modal-title">Lupa Password</span>
+                </div>
+                <button class="modal-close" data-close="forgotModal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-desc">Masukkan email akun Anda. Kami akan mengirimkan link untuk membuat password baru.</p>
+                <form id="forgotForm">
+                    <div class="form-group">
+                        <label class="form-label" for="forgotEmail">Email</label>
+                        <input type="email" id="forgotEmail" class="form-control-flat" placeholder="Masukkan email Anda" autocomplete="email" required>
+                        <div class="form-error" id="forgotEmailError"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <span></span>
+                <div class="modal-footer-actions">
+                    <button class="btn-secondary" data-close="forgotModal">Batal</button>
+                    <button class="btn-primary" id="forgotSubmitBtn">
+                        <span id="forgotBtnText"><i class="fas fa-paper-plane"></i> Kirim Link</span>
+                        <span class="spinner" id="forgotBtnSpinner" style="display: none;"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="/static/js/login.js"></script>
     
 </body>
