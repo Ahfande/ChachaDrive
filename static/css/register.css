@@ -528,259 +528,117 @@ body::before {
 /* ============================================
    ALERT
    ============================================ */
-/* ============================================
-   ALERT NOTIFICATION - TOAST STYLE
-   ============================================ */
 #alertContainer {
     position: fixed;
-    top: 20px;
-    right: 20px;
+    top: 24px;
+    right: 24px;
     z-index: 99999;
+    max-width: 380px;
     width: 100%;
-    max-width: 400px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
     pointer-events: none;
 }
 
 #alertContainer .alert {
     pointer-events: auto;
-    position: relative;
-    padding: 16px 20px;
-    border-radius: 12px;
+    padding: 14px 18px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
-    gap: 12px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
-    animation: toastSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    gap: 10px;
+    font-family: 'Inter', sans-serif;
     font-size: 0.85rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    transform-origin: top right;
-    min-height: 52px;
+    font-weight: 500;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.10);
+    animation: slideIn 0.3s ease forwards;
+    border-left: 3px solid;
 }
 
-@keyframes toastSlideIn {
-    0% {
-        opacity: 0;
-        transform: translateX(40px) scale(0.95);
-    }
-    100% {
-        opacity: 1;
-        transform: translateX(0) scale(1);
-    }
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
 }
 
-@keyframes toastSlideOut {
-    0% {
-        opacity: 1;
-        transform: translateX(0) scale(1);
-        max-height: 200px;
-        margin-bottom: 10px;
-        padding: 16px 20px;
-    }
-    100% {
-        opacity: 0;
-        transform: translateX(40px) scale(0.95);
-        max-height: 0;
-        margin-bottom: 0;
-        padding: 0 20px;
-        overflow: hidden;
-    }
+@keyframes slideOut {
+    from { opacity: 1; transform: translateX(0); }
+    to { opacity: 0; transform: translateX(20px); }
 }
 
-#alertContainer .alert.alert-hiding {
-    animation: toastSlideOut 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    pointer-events: none;
+#alertContainer .alert.hide {
+    animation: slideOut 0.25s ease forwards;
 }
 
-/* Alert Types - Clean & Professional */
+/* Types */
 #alertContainer .alert-success {
-    background: rgba(236, 253, 245, 0.95);
-    border-left: 4px solid #10B981;
-    color: #065F46;
-}
-
-#alertContainer .alert-success .alert-icon {
-    color: #10B981;
+    background: #ecfdf5;
+    border-left-color: #10b981;
+    color: #065f46;
 }
 
 #alertContainer .alert-danger {
-    background: rgba(254, 242, 242, 0.95);
-    border-left: 4px solid #EF4444;
-    color: #991B1B;
-}
-
-#alertContainer .alert-danger .alert-icon {
-    color: #EF4444;
+    background: #fef2f2;
+    border-left-color: #ef4444;
+    color: #991b1b;
 }
 
 #alertContainer .alert-warning {
-    background: rgba(255, 251, 235, 0.95);
-    border-left: 4px solid #F59E0B;
-    color: #78350F;
-}
-
-#alertContainer .alert-warning .alert-icon {
-    color: #F59E0B;
+    background: #fffbeb;
+    border-left-color: #f59e0b;
+    color: #78350f;
 }
 
 #alertContainer .alert-info {
-    background: rgba(239, 246, 255, 0.95);
-    border-left: 4px solid #3B82F6;
-    color: #1E40AF;
+    background: #eff6ff;
+    border-left-color: #3b82f6;
+    color: #1e40af;
 }
 
-#alertContainer .alert-info .alert-icon {
-    color: #3B82F6;
-}
-
-/* Alert Icon */
-#alertContainer .alert .alert-icon {
+/* Icons */
+#alertContainer .alert i {
+    font-size: 1rem;
     flex-shrink: 0;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.85rem;
-    background: rgba(255, 255, 255, 0.5);
 }
 
-/* Alert Content */
-#alertContainer .alert .alert-content {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-}
+#alertContainer .alert-success i { color: #10b981; }
+#alertContainer .alert-danger i { color: #ef4444; }
+#alertContainer .alert-warning i { color: #f59e0b; }
+#alertContainer .alert-info i { color: #3b82f6; }
 
-#alertContainer .alert .alert-title {
-    font-weight: 600;
-    font-size: 0.85rem;
-    display: none;
-}
-
-#alertContainer .alert .alert-message {
-    font-size: 0.85rem;
-    line-height: 1.4;
-    font-weight: 500;
-}
-
-/* Alert Close Button */
-#alertContainer .alert .alert-close {
-    flex-shrink: 0;
+/* Close button */
+#alertContainer .alert .close {
+    margin-left: auto;
     background: none;
     border: none;
     color: inherit;
     opacity: 0.4;
     cursor: pointer;
     font-size: 0.9rem;
-    padding: 4px;
-    transition: opacity 0.2s ease;
-    line-height: 1;
-    margin-left: auto;
+    padding: 2px 4px;
 }
 
-#alertContainer .alert .alert-close:hover {
+#alertContainer .alert .close:hover {
     opacity: 0.8;
 }
 
-/* Progress Bar */
-#alertContainer .alert .alert-progress {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 3px;
-    border-radius: 0 0 12px 12px;
-    background: rgba(0, 0, 0, 0.08);
-    animation: toastProgress 3.5s linear forwards;
-}
-
-#alertContainer .alert-success .alert-progress {
-    background: #10B981;
-}
-
-#alertContainer .alert-danger .alert-progress {
-    background: #EF4444;
-}
-
-#alertContainer .alert-warning .alert-progress {
-    background: #F59E0B;
-}
-
-#alertContainer .alert-info .alert-progress {
-    background: #3B82F6;
-}
-
-@keyframes toastProgress {
-    0% { width: 100%; }
-    100% { width: 0%; }
-}
-
-/* Responsive */
+/* Mobile */
 @media (max-width: 480px) {
     #alertContainer {
-        top: 12px;
-        right: 12px;
-        left: 12px;
+        top: 16px;
+        right: 16px;
+        left: 16px;
         max-width: none;
         width: auto;
     }
     
     #alertContainer .alert {
-        padding: 14px 16px;
-        border-radius: 10px;
-        min-height: 48px;
+        padding: 12px 14px;
         font-size: 0.8rem;
-    }
-    
-    #alertContainer .alert .alert-icon {
-        width: 24px;
-        height: 24px;
-        font-size: 0.75rem;
-    }
-    
-    #alertContainer .alert .alert-message {
-        font-size: 0.8rem;
+        border-radius: 8px;
     }
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-    #alertContainer .alert-success {
-        background: rgba(6, 78, 59, 0.92);
-        border-left-color: #34D399;
-        color: #D1FAE5;
-    }
-    
-    #alertContainer .alert-danger {
-        background: rgba(127, 29, 29, 0.92);
-        border-left-color: #F87171;
-        color: #FEE2E2;
-    }
-    
-    #alertContainer .alert-warning {
-        background: rgba(120, 53, 15, 0.92);
-        border-left-color: #FBBF24;
-        color: #FEF3C7;
-    }
-    
-    #alertContainer .alert-info {
-        background: rgba(30, 58, 138, 0.92);
-        border-left-color: #60A5FA;
-        color: #DBEAFE;
-    }
-    
-    #alertContainer .alert .alert-icon {
-        background: rgba(255, 255, 255, 0.08);
-    }
-}
 
 /* ============================================
    RESPONSIVE
