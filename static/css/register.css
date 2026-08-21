@@ -16,7 +16,9 @@
     --primary-light: #60A5FA;
     --primary-bg: rgba(37, 99, 235, 0.08);
     --primary-gradient: linear-gradient(135deg, #2563EB, #7C3AED);
-    --secondary: #F8FAFC;
+    --success: #10B981;
+    --danger: #EF4444;
+    --warning: #F59E0B;
     --text-dark: #0F172A;
     --text-muted: #64748B;
     --text-light: #94A3B8;
@@ -39,10 +41,11 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 16px;
+    padding: 20px 16px;
     background: #0F172A;
     position: relative;
-    /* overflow: hidden; */
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 body::before {
@@ -102,42 +105,26 @@ body::before {
    ============================================ */
 .container {
     width: 100%;
-    max-width: 420px;
+    max-width: 440px;
     padding: 12px;
     position: relative;
     z-index: 1;
 }
 
 /* ============================================
-   KOTAK REGISTER
+   KOTAK TOTP
    ============================================ */
-.register-box {
+.totp-box {
     background: var(--glass-bg);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-radius: var(--radius);
-    padding: 24px 32px 22px;
+    padding: 24px 28px 22px;
     border: 1px solid var(--glass-border);
     box-shadow: var(--shadow);
     position: relative;
-    overflow: hidden;
+    overflow: visible;
     transition: var(--transition);
-}
-
-.register-box:hover {
-    box-shadow: var(--shadow-hover);
-}
-
-.register-box::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, transparent 50%);
-    pointer-events: none;
-    border-radius: var(--radius);
 }
 
 /* ============================================
@@ -153,7 +140,7 @@ body::before {
     font-size: 0.6rem;
     font-weight: 600;
     color: var(--primary);
-    margin: 0 auto 12px;
+    margin: 0 auto 10px;
     border: 1px solid rgba(37, 99, 235, 0.12);
     letter-spacing: 0.2px;
     text-transform: uppercase;
@@ -164,16 +151,16 @@ body::before {
 }
 
 /* ============================================
-   ICON REGISTER
+   ICON
    ============================================ */
-.register-icon-wrapper {
+.totp-icon-wrapper {
     position: relative;
     width: 60px;
     height: 60px;
     margin: 0 auto 8px;
 }
 
-.register-icon {
+.totp-icon {
     width: 60px;
     height: 60px;
     background: var(--primary-gradient);
@@ -201,7 +188,7 @@ body::before {
 /* ============================================
    JUDUL
    ============================================ */
-.register-title {
+.totp-title {
     font-size: 1.3rem;
     font-weight: 800;
     text-align: center;
@@ -210,18 +197,161 @@ body::before {
     letter-spacing: -0.3px;
 }
 
-.register-subtitle {
+.totp-subtitle {
     text-align: center;
     color: var(--text-muted);
     font-size: 0.8rem;
     margin-bottom: 16px;
 }
 
+.totp-subtitle .user-email {
+    display: block;
+    margin-top: 4px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
 /* ============================================
-   FORM GROUP
+   STEP
+   ============================================ */
+.step-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.step-number {
+    width: 28px;
+    height: 28px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.step-content h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 2px;
+}
+
+.step-content p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* ============================================
+   QR CODE
+   ============================================ */
+.qr-container {
+    background: white;
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin: 8px 0 16px;
+    border: 2px solid var(--border);
+    text-align: center;
+}
+
+.qr-code {
+    width: 160px;
+    height: 160px;
+    margin: 0 auto 12px;
+    background: white;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.qr-code img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.qr-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-light);
+}
+
+.qr-placeholder i {
+    font-size: 2.5rem;
+}
+
+.qr-placeholder span {
+    font-size: 0.8rem;
+}
+
+.secret-key {
+    text-align: left;
+}
+
+.secret-key label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 4px;
+}
+
+.secret-value {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--secondary);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.secret-value span {
+    flex: 1;
+    word-break: break-all;
+}
+
+.copy-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: var(--transition);
+}
+
+.copy-btn:hover {
+    background: var(--primary-bg);
+    color: var(--primary);
+}
+
+.secret-key small {
+    display: block;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+/* ============================================
+   FORM
    ============================================ */
 .form-group {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
 .form-label {
@@ -238,9 +368,6 @@ body::before {
     font-size: 0.75rem;
 }
 
-/* ============================================
-   INPUT
-   ============================================ */
 .input-wrapper {
     position: relative;
 }
@@ -258,10 +385,10 @@ body::before {
 
 .form-control {
     width: 100%;
-    padding: 9px 14px 9px 38px;
+    padding: 10px 14px 10px 38px;
     border: 2px solid var(--border);
     border-radius: var(--radius-sm);
-    font-size: 0.88rem;
+    font-size: 0.9rem;
     font-family: inherit;
     transition: var(--transition);
     background: rgba(255, 255, 255, 0.6);
@@ -281,133 +408,40 @@ body::before {
 
 .form-control::placeholder {
     color: var(--text-light);
-    font-size: 0.82rem;
+    font-size: 0.85rem;
 }
 
-/* Toggle Password */
-.toggle-password {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: var(--text-light);
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: var(--transition);
-    padding: 4px;
+.form-control.totp-input {
+    text-align: center;
+    font-size: 1.4rem;
+    letter-spacing: 8px;
+    font-weight: 700;
+    padding: 12px;
 }
 
-.toggle-password:hover {
-    color: var(--primary);
+.form-control.totp-input::placeholder {
+    letter-spacing: 4px;
 }
 
 /* ============================================
-   PASSWORD STRENGTH
-   ============================================ */
-.password-strength {
-    margin-top: 6px;
-}
-
-.strength-bar {
-    height: 3px;
-    background: var(--border);
-    border-radius: 4px;
-    overflow: hidden;
-}
-
-.strength-fill {
-    height: 100%;
-    width: 0%;
-    border-radius: 4px;
-    transition: var(--transition);
-}
-
-.strength-text {
-    font-size: 0.65rem;
-    color: var(--text-muted);
-    margin-top: 3px;
-    display: block;
-}
-
-/* ============================================
-   PESAN ERROR
+   FORM ERROR
    ============================================ */
 .form-error {
-    color: #EF4444;
-    font-size: 0.72rem;
+    color: var(--danger);
+    font-size: 0.75rem;
     margin-top: 3px;
-    min-height: 16px;
+    min-height: 18px;
     display: flex;
     align-items: center;
     gap: 4px;
 }
 
 /* ============================================
-   FORM OPTIONS
+   TOMBOL
    ============================================ */
-.form-options {
-    display: flex;
-    align-items: center;
-    margin: 12px 0 14px;
-}
-
-.checkbox-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.82rem;
-    color: var(--text-muted);
-    cursor: pointer;
-    user-select: none;
-}
-
-.checkbox-label input[type="checkbox"] {
-    display: none;
-}
-
-.custom-checkbox {
-    width: 18px;
-    height: 18px;
-    border: 2px solid var(--border);
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: var(--transition);
-    flex-shrink: 0;
-    background: white;
-}
-
-.custom-checkbox i {
-    font-size: 0.6rem;
-    color: white;
-    opacity: 0;
-    transform: scale(0.5);
-    transition: var(--transition);
-}
-
-.checkbox-label input:checked + .custom-checkbox {
-    background: var(--primary);
-    border-color: var(--primary);
-}
-
-.checkbox-label input:checked + .custom-checkbox i {
-    opacity: 1;
-    transform: scale(1);
-}
-
-.checkbox-label:hover .custom-checkbox {
-    border-color: var(--primary);
-}
-
-/* ============================================
-   TOMBOL REGISTER
-   ============================================ */
-.btn-register {
+.btn-totp {
     width: 100%;
-    padding: 10px 24px;
+    padding: 10px 20px;
     background: var(--primary-gradient);
     color: white;
     border: none;
@@ -425,15 +459,15 @@ body::before {
     overflow: hidden;
 }
 
-.btn-register:hover {
+.btn-totp:hover {
     box-shadow: 0 6px 24px rgba(37, 99, 235, 0.35);
 }
 
-.btn-register:active {
+.btn-totp:active {
     transform: translateY(0);
 }
 
-.btn-register:disabled {
+.btn-totp:disabled {
     opacity: 0.7;
     cursor: not-allowed;
     transform: none !important;
@@ -450,7 +484,7 @@ body::before {
     transition: var(--transition);
 }
 
-.btn-register:hover .btn-icon {
+.btn-totp:hover .btn-icon {
     transform: translateX(4px);
 }
 
@@ -474,6 +508,38 @@ body::before {
 }
 
 /* ============================================
+   INFO PENTING
+   ============================================ */
+.important-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: rgba(245, 158, 11, 0.08);
+    border-left: 3px solid var(--warning);
+    padding: 10px 12px;
+    border-radius: 6px;
+    margin: 12px 0 16px;
+}
+
+.important-info i {
+    color: var(--warning);
+    font-size: 1rem;
+    margin-top: 2px;
+}
+
+.important-info strong {
+    font-size: 0.8rem;
+    color: var(--text-dark);
+    display: block;
+}
+
+.important-info p {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+/* ============================================
    DIVIDER
    ============================================ */
 .divider {
@@ -482,7 +548,7 @@ body::before {
     gap: 12px;
     margin: 14px 0 12px;
     color: var(--text-muted);
-    font-size: 0.75rem;
+    font-size: 0.7rem;
 }
 
 .divider::before,
@@ -494,17 +560,34 @@ body::before {
 }
 
 /* ============================================
-   LINK LOGIN
+   LINK
    ============================================ */
-.login-link {
+.back-link {
     text-align: center;
-    color: var(--text-muted);
-    font-size: 0.88rem;
+    font-size: 0.85rem;
 }
 
-.login-link a {
+.back-link a {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.back-link a:hover {
     color: var(--primary);
-    font-weight: 600;
+}
+
+.help-links {
+    text-align: center;
+    margin-top: 12px;
+}
+
+.help-link {
+    color: var(--text-muted);
+    font-size: 0.8rem;
     text-decoration: none;
     transition: var(--transition);
     display: inline-flex;
@@ -512,17 +595,58 @@ body::before {
     gap: 4px;
 }
 
-.login-link a i {
-    font-size: 0.75rem;
-    transition: var(--transition);
+.help-link:hover {
+    color: var(--primary);
 }
 
-.login-link a:hover {
-    color: var(--primary-dark);
+/* ============================================
+   TIMER
+   ============================================ */
+.timer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 16px;
 }
 
-.login-link a:hover i {
-    transform: translateX(4px);
+.timer-circle {
+    position: relative;
+    width: 64px;
+    height: 64px;
+}
+
+.timer-circle svg {
+    transform: rotate(-90deg);
+}
+
+.timer-circle .timer-bg {
+    fill: none;
+    stroke: var(--border);
+    stroke-width: 6;
+}
+
+.timer-circle .timer-progress {
+    fill: none;
+    stroke: var(--primary);
+    stroke-width: 6;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s linear;
+}
+
+.timer-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.timer-label {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    margin-top: 4px;
 }
 
 /* ============================================
@@ -639,43 +763,42 @@ body::before {
     }
 }
 
-
 /* ============================================
    RESPONSIVE
    ============================================ */
 @media (max-width: 480px) {
     body {
-        padding: 12px;
+        padding: 16px 12px;
     }
     
     .container {
-        padding: 8px;
+        padding: 6px;
         max-width: 100%;
     }
     
-    .register-box {
-        padding: 20px 18px 16px;
+    .totp-box {
+        padding: 20px 16px 16px;
         border-radius: var(--radius-sm);
     }
     
-    .register-title {
-        font-size: 1.15rem;
+    .totp-title {
+        font-size: 1.1rem;
     }
     
-    .register-subtitle {
+    .totp-subtitle {
         font-size: 0.75rem;
         margin-bottom: 12px;
     }
     
-    .register-icon-wrapper {
+    .totp-icon-wrapper {
         width: 50px;
         height: 50px;
     }
     
-    .register-icon {
+    .totp-icon {
         width: 50px;
         height: 50px;
-        font-size: 1.4rem;
+        font-size: 1.3rem;
     }
     
     .icon-ring {
@@ -683,84 +806,104 @@ body::before {
         height: 56px;
     }
     
-    .form-group {
-        margin-bottom: 8px;
+    .qr-code {
+        width: 140px;
+        height: 140px;
     }
     
-    .form-control {
-        padding: 8px 12px 8px 34px;
+    .form-control.totp-input {
+        font-size: 1.2rem;
+        letter-spacing: 6px;
+        padding: 10px;
+    }
+    
+    .btn-totp {
+        padding: 9px 16px;
         font-size: 0.85rem;
-    }
-    
-    .btn-register {
-        padding: 10px 16px;
-        font-size: 0.9rem;
     }
     
     .security-badge {
         font-size: 0.5rem;
         padding: 3px 10px;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
+    }
+    
+    .step-number {
+        width: 24px;
+        height: 24px;
+        font-size: 0.65rem;
+    }
+    
+    .step-content h4 {
+        font-size: 0.8rem;
+    }
+    
+    .step-content p {
+        font-size: 0.7rem;
+    }
+    
+    .timer-circle {
+        width: 56px;
+        height: 56px;
+    }
+    
+    .timer-text {
+        font-size: 1rem;
     }
     
     .divider {
         margin: 12px 0 10px;
-        font-size: 0.7rem;
-    }
-    
-    .login-link {
-        font-size: 0.82rem;
-    }
-    
-    .form-options {
-        margin: 8px 0 10px;
+        font-size: 0.65rem;
     }
 }
 
 @media (max-width: 380px) {
-    .register-box {
+    .totp-box {
         padding: 16px 12px 12px;
     }
     
-    .register-title {
-        font-size: 1rem;
+    .totp-title {
+        font-size: 0.95rem;
     }
     
-    .register-icon-wrapper {
+    .totp-icon-wrapper {
         width: 44px;
         height: 44px;
     }
     
-    .register-icon {
+    .totp-icon {
         width: 44px;
         height: 44px;
-        font-size: 1.2rem;
+        font-size: 1.1rem;
     }
     
     .icon-ring {
         width: 50px;
         height: 50px;
     }
+    
+    .qr-code {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .form-control.totp-input {
+        font-size: 1rem;
+        letter-spacing: 4px;
+        padding: 8px;
+    }
 }
 
 /* ============================================
-   STATUS INPUT INVALID
+   STATUS INVALID
    ============================================ */
 .form-control.is-invalid {
-    border-color: #EF4444;
+    border-color: var(--danger);
     box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
 }
 
 .form-control.is-invalid ~ .input-icon {
-    color: #EF4444;
-}
-
-/* ============================================
-   AUTOCOMPLETE STYLE
-   ============================================ */
-.form-control:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 30px white inset !important;
-    -webkit-text-fill-color: var(--text-dark) !important;
+    color: var(--danger);
 }
 
 /* ============================================
@@ -776,4 +919,15 @@ body::before {
     20%, 40%, 60%, 80% {
         transform: translateX(6px);
     }
+}
+
+/* ============================================
+   VERIFY BOX - khusus untuk halaman verify
+   ============================================ */
+.verify-box .totp-title {
+    font-size: 1.2rem;
+}
+
+.verify-box .totp-subtitle {
+    margin-bottom: 12px;
 }
