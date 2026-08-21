@@ -72,22 +72,12 @@ body::before {
 .circle {
     position: absolute;
     border-radius: 50%;
-    background: rgba(37, 99, 235, 0.04);
-    animation: floatCircle 20s ease-in-out infinite;
+    background: rgba(37, 99, 235, 0.05);
 }
 
-.circle-1 { width: 250px; height: 250px; top: -80px; left: -80px; }
-.circle-2 { width: 320px; height: 320px; bottom: -110px; right: -100px; animation-delay: 5s; background: rgba(124, 58, 237, 0.03); }
-.circle-3 { width: 150px; height: 150px; top: 40%; left: 55%; animation-delay: 10s; background: rgba(37, 99, 235, 0.02); }
-.circle-4 { width: 100px; height: 100px; top: 15%; right: 8%; animation-delay: 3s; background: rgba(124, 58, 237, 0.025); }
-.circle-5 { width: 180px; height: 180px; bottom: 10%; left: 45%; animation-delay: 7s; background: rgba(37, 99, 235, 0.02); }
-
-@keyframes floatCircle {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    25% { transform: translate(25px, -25px) scale(1.05); }
-    50% { transform: translate(-15px, 15px) scale(0.95); }
-    75% { transform: translate(15px, 20px) scale(1.02); }
-}
+.circle-1 { width: 280px; height: 280px; top: -100px; left: -100px; }
+.circle-2 { width: 320px; height: 320px; bottom: -120px; right: -120px; background: rgba(124, 58, 237, 0.04); }
+.circle-3, .circle-4, .circle-5 { display: none; }
 
 /* ============================================
    APP SHELL
@@ -244,10 +234,13 @@ body::before {
 .storage-fill {
     height: 100%;
     width: 0%;
-    background: var(--primary-gradient);
+    background: var(--primary);
     border-radius: 4px;
-    transition: width 0.5s ease;
+    transition: width 0.4s ease;
 }
+
+.storage-fill--warning { background: var(--warning); }
+.storage-fill--full { background: var(--danger); }
 
 .sidebar-overlay {
     display: none;
