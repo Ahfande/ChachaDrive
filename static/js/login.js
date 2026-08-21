@@ -36,7 +36,116 @@ document.addEventListener('DOMContentLoaded', function() {
     if (passwordInput) {
         passwordInput.addEventListener('keydown', handleEnterKey);
     }
+
+    setupForgotPasswordModal();
 });
+
+// 🔥 MODAL LUPA PASSWORD
+function setupForgotPasswordModal() {
+    const forgotLink = document.getElementById('forgotLink');
+    const modal = document.getElementById('forgotModal');
+    const emailInput = document.getElementById('forgotEmail');
+    const errorEl = document.getElementById('forgotEmailError');
+    const submitBtn = document.getElementById('forgotSubmitBtn');
+
+    if (!forgotLink || !modal) return;
+
+    const openModal = () => {
+        modal.classList.add('show');
+        if (emailInput) {
+            emailInput.value = '';
+            emailInput.classList.remove('is-invalid');
+            setTimeout(() => emailInput.focus(), 50);
+        }
+        if (errorEl) errorEl.textContent = '';
+    };
+
+    const closeModal = () => modal.classList.remove('show');
+
+    forgotLink.addEventListener('click', function (event) {
+        event.preventDefault();
+        openModal();
+    });
+
+    // Tombol close & backdrop (data-close="forgotModal")
+    modal.querySelectorAll('[data-close="forgotModal"]').forEach((el) => {
+        el.addEventListener('click', closeModal);
+    });
+    modal.addEventListener('click', function (event) {
+        if (event.target === modal) closeModal();
+    });
+
+    const submitForgotPassword = function () {
+        const email = emailInput ? emailInput.value.trim() : '';
+
+        if (errorEl) errorEl.textContent = '';
+        if (emailInput) emailInput.classList.remove('is-invalid');
+
+        if (!email || !isValidEmail(email)) {
+            if (emailInput) emailInput.classList.add('is-invalid');
+            if (errorEl) errorEl.textContent = '⚠️ Masukkan email yang valid';
+            return;
+        }
+
+        setForgotLoading(true);
+
+        const csrfToken = getCSRFToken();
+
+        fetch(`${API_BASE_URL}/accounts/forgot-password/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+            },
+            credentials: 'include',
+            body: JSON.stringify({ email }),
+        })
+        .then(async (response) => {
+            const text = await response.text();
+            try {
+                return JSON.parse(text);
+            } catch (e) {
+                throw new Error('Invalid JSON response');
+            }
+        })
+        .then((data) => {
+            setForgotLoading(false);
+            if (data.success) {
+                closeModal();
+                showAlert('success', '✅ ' + data.message);
+            } else {
+                showAlert('danger', '❌ ' + (data.message || 'Gagal mengirim link reset'));
+            }
+        })
+        .catch((error) => {
+            setForgotLoading(false);
+            console.error('❌ Forgot password error:', error);
+            showAlert('danger', '❌ Gagal terhubung ke server. Coba lagi.');
+        });
+    };
+
+    if (submitBtn) {
+        submitBtn.addEventListener('click', submitForgotPassword);
+    }
+    if (emailInput) {
+        emailInput.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                submitForgotPassword();
+            }
+        });
+    }
+}
+
+function setForgotLoading(show) {
+    const btn = document.getElementById('forgotSubmitBtn');
+    const btnText = document.getElementById('forgotBtnText');
+    const spinner = document.getElementById('forgotBtnSpinner');
+
+    if (btn) btn.disabled = show;
+    if (btnText) btnText.style.display = show ? 'none' : 'inline-flex';
+    if (spinner) spinner.style.display = show ? 'inline-block' : 'none';
+}
 
 function handleLogin(event) {
     event.preventDefault();
@@ -274,27 +383,42 @@ function showAlert(type, message) {
     const container = document.getElementById('alertContainer');
     if (!container) return;
     
-    const icons = { success: '✅', danger: '❌', warning: '⚠️', info: 'ℹ️' };
+    const icons = {
+        success: 'fa-check-circle',
+        danger: 'fa-times-circle',
+        warning: 'fa-exclamation-triangle',
+        info: 'fa-info-circle'
+    };
+    
     const alert = document.createElement('div');
-    alert.className = 'alert alert-' + type;
+    alert.className = `alert alert-${type}`;
     alert.innerHTML = `
-        <span class="alert-icon">${icons[type] || 'ℹ️'}</span>
+        <i class="fas ${icons[type] || icons.info}"></i>
         <span>${message}</span>
-        <button class="alert-close" onclick="this.parentElement.remove()">✕</button>
+        <button class="close">&times;</button>
     `;
+    
+    // Hapus alert lama
+    container.querySelectorAll('.alert').forEach(el => {
+        el.classList.add('hide');
+        setTimeout(() => el.remove(), 300);
+    });
     
     container.appendChild(alert);
     
-    setTimeout(function() {
+    // Close button
+    alert.querySelector('.close').addEventListener('click', () => {
+        alert.classList.add('hide');
+        setTimeout(() => alert.remove(), 300);
+    });
+    
+    // Auto close 3 detik
+    setTimeout(() => {
         if (alert.parentElement) {
-            alert.style.opacity = '0';
-            alert.style.transform = 'translateY(-10px)';
-            alert.style.transition = 'all 0.3s ease';
-            setTimeout(function() {
-                if (alert.parentElement) alert.remove();
-            }, 300);
+            alert.classList.add('hide');
+            setTimeout(() => alert.remove(), 300);
         }
-    }, 5000);
+    }, 3000);
 }
 
 function checkRememberedUser() {
