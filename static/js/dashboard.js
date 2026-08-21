@@ -57,6 +57,8 @@ const ownerEmail = currentUser.email;
     // (SESSION_COOKIE_SAMESITE = 'Lax') tidak diblokir browser sebagai
     // request cross-site (localhost vs 127.0.0.1 dianggap origin berbeda).
     const API_BASE_URL = window.location.origin + '/api';
+    // Kuota mengikuti batas storage bucket Supabase (Free tier = 1 GB).
+    // Kalau paket Supabase-nya naik ke Pro, cukup ubah angka ini saja.
     const QUOTA_BYTES = 1024 * 1024 * 1024;
 
     const IMAGE_EXT = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'bmp'];
@@ -846,8 +848,15 @@ function cleanupThumbnails() {
     function renderStorage() {
         const totalBytes = allFiles.reduce((sum, f) => sum + f.file_size, 0);
         const pct = Math.min(100, (totalBytes / QUOTA_BYTES) * 100);
-        document.getElementById('storageFill').style.width = pct + '%';
-        document.getElementById('storageText').textContent = formatBytes(totalBytes) + ' / 1 GB';
+        const fillEl = document.getElementById('storageFill');
+        const textEl = document.getElementById('storageText');
+
+        fillEl.style.width = pct + '%';
+        textEl.textContent = formatBytes(totalBytes) + ' / ' + formatBytes(QUOTA_BYTES);
+
+        // Beri warna peringatan saat storage hampir penuh
+        fillEl.classList.toggle('storage-fill--warning', pct >= 80 && pct < 95);
+        fillEl.classList.toggle('storage-fill--full', pct >= 95);
     }
 
     // ============================================
@@ -1123,28 +1132,47 @@ function cleanupThumbnails() {
     // ============================================
     // ALERT
     // ============================================
-    function showAlert(type, message) {
-        const container = document.getElementById('alertContainer');
-        if (!container) return;
-        
-        const icons = { success: '✅', danger: '❌', warning: '⚠️', info: 'ℹ️' };
-        const alert = document.createElement('div');
-        alert.className = 'alert alert-' + type;
-        alert.innerHTML =
-            '<span class="alert-icon">' + (icons[type] || 'ℹ️') + '</span>' +
-            '<span>' + escapeHtml(message) + '</span>' +
-            '<button class="alert-close" onclick="this.parentElement.remove()">✕</button>';
-        container.appendChild(alert);
-        
-        setTimeout(() => {
-            if (alert.parentElement) {
-                alert.style.opacity = '0';
-                alert.style.transform = 'translateY(-10px)';
-                alert.style.transition = 'all 0.3s ease';
-                setTimeout(() => alert.remove(), 300);
-            }
-        }, 4000);
-    }
+function showAlert(type, message) {
+    const container = document.getElementById('alertContainer');
+    if (!container) return;
+    
+    const icons = {
+        success: 'fa-check-circle',
+        danger: 'fa-times-circle',
+        warning: 'fa-exclamation-triangle',
+        info: 'fa-info-circle'
+    };
+    
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type}`;
+    alert.innerHTML = `
+        <i class="fas ${icons[type] || icons.info}"></i>
+        <span>${message}</span>
+        <button class="close">&times;</button>
+    `;
+    
+    // Hapus alert lama
+    container.querySelectorAll('.alert').forEach(el => {
+        el.classList.add('hide');
+        setTimeout(() => el.remove(), 300);
+    });
+    
+    container.appendChild(alert);
+    
+    // Close button
+    alert.querySelector('.close').addEventListener('click', () => {
+        alert.classList.add('hide');
+        setTimeout(() => alert.remove(), 300);
+    });
+    
+    // Auto close 3 detik
+    setTimeout(() => {
+        if (alert.parentElement) {
+            alert.classList.add('hide');
+            setTimeout(() => alert.remove(), 300);
+        }
+    }, 3000);
+}
 
     // ============================================
     // EVENT WIRING
