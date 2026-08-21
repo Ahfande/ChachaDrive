@@ -1142,27 +1142,113 @@ body::before {
    ============================================ */
 #alertContainer {
     position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 9999;
-    width: 90%;
-    max-width: 400px;
+    top: 24px;
+    right: 24px;
+    z-index: 99999;
+    max-width: 380px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    pointer-events: none;
 }
 
-.alert {
-    padding: 12px 18px;
-    border-radius: var(--radius-sm);
-    margin-bottom: 8px;
+#alertContainer .alert {
+    pointer-events: auto;
+    padding: 14px 18px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     gap: 10px;
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
-    animation: slideDown 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.10);
+    animation: slideIn 0.3s ease forwards;
+    border-left: 3px solid;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideOut {
+    from { opacity: 1; transform: translateX(0); }
+    to { opacity: 0; transform: translateX(20px); }
+}
+
+#alertContainer .alert.hide {
+    animation: slideOut 0.25s ease forwards;
+}
+
+/* Types */
+#alertContainer .alert-success {
+    background: #ecfdf5;
+    border-left-color: #10b981;
+    color: #065f46;
+}
+
+#alertContainer .alert-danger {
+    background: #fef2f2;
+    border-left-color: #ef4444;
+    color: #991b1b;
+}
+
+#alertContainer .alert-warning {
+    background: #fffbeb;
+    border-left-color: #f59e0b;
+    color: #78350f;
+}
+
+#alertContainer .alert-info {
+    background: #eff6ff;
+    border-left-color: #3b82f6;
+    color: #1e40af;
+}
+
+/* Icons */
+#alertContainer .alert i {
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+#alertContainer .alert-success i { color: #10b981; }
+#alertContainer .alert-danger i { color: #ef4444; }
+#alertContainer .alert-warning i { color: #f59e0b; }
+#alertContainer .alert-info i { color: #3b82f6; }
+
+/* Close button */
+#alertContainer .alert .close {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: inherit;
+    opacity: 0.4;
+    cursor: pointer;
     font-size: 0.9rem;
-    background: white;
+    padding: 2px 4px;
+}
+
+#alertContainer .alert .close:hover {
+    opacity: 0.8;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    #alertContainer {
+        top: 16px;
+        right: 16px;
+        left: 16px;
+        max-width: none;
+        width: auto;
+    }
+    
+    #alertContainer .alert {
+        padding: 12px 14px;
+        font-size: 0.8rem;
+        border-radius: 8px;
+    }
 }
 
 @keyframes slideDown {
