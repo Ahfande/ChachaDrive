@@ -378,31 +378,42 @@ function updateTimerDisplay() {
 
 function showAlert(type, message) {
     const container = document.getElementById('alertContainer');
-    if (!container) {
-        console.warn('⚠️ Alert container not found');
-        return;
-    }
+    if (!container) return;
     
-    const icons = { success: '✅', danger: '❌', warning: '⚠️', info: 'ℹ️' };
+    const icons = {
+        success: 'fa-check-circle',
+        danger: 'fa-times-circle',
+        warning: 'fa-exclamation-triangle',
+        info: 'fa-info-circle'
+    };
+    
     const alert = document.createElement('div');
-    alert.className = 'alert alert-' + type;
+    alert.className = `alert alert-${type}`;
     alert.innerHTML = `
-        <span class="alert-icon">${icons[type] || 'ℹ️'}</span>
+        <i class="fas ${icons[type] || icons.info}"></i>
         <span>${message}</span>
-        <button class="alert-close" onclick="this.parentElement.remove()">✕</button>
+        <button class="close">&times;</button>
     `;
+    
+    // Hapus alert lama
+    container.querySelectorAll('.alert').forEach(el => {
+        el.classList.add('hide');
+        setTimeout(() => el.remove(), 300);
+    });
     
     container.appendChild(alert);
     
-    // Auto remove after 5 seconds
-    setTimeout(function() {
+    // Close button
+    alert.querySelector('.close').addEventListener('click', () => {
+        alert.classList.add('hide');
+        setTimeout(() => alert.remove(), 300);
+    });
+    
+    // Auto close 3 detik
+    setTimeout(() => {
         if (alert.parentElement) {
-            alert.style.opacity = '0';
-            alert.style.transform = 'translateY(-10px)';
-            alert.style.transition = 'all 0.3s ease';
-            setTimeout(function() {
-                if (alert.parentElement) alert.remove();
-            }, 300);
+            alert.classList.add('hide');
+            setTimeout(() => alert.remove(), 300);
         }
-    }, 5000);
+    }, 3000);
 }
