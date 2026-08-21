@@ -6,11 +6,13 @@ import json
 import base64
 import io
 import os
-from datetime import datetime
+import secrets
+from datetime import datetime, timedelta
 
 import pyotp
 import qrcode
 from django.conf import settings
+from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.contrib.auth.hashers import make_password, check_password
 from django.views.decorators.csrf import csrf_exempt
@@ -278,3 +280,133 @@ def logout_view(request):
     
     return response
 
+
+# ============================================
+# LUPA PASSWORD
+# ============================================
+
+RESET_TOKEN_TTL_MINUTES = 60  # link reset berlaku 1 jam
+
+
+def _send_reset_email(request, email, token):
+    """Kirim email berisi link reset password.
+
+    Di development, kalau EMAIL_BACKEND belum diset, pakai console backend
+    (link akan tampil di terminal runserver) supaya bisa langsung dites
+    tanpa perlu SMTP asli. Untuk production, set EMAIL_BACKEND SMTP di settings.py.
+    """
+    reset_link = request.build_absolute_uri(f'/reset-password/?token={token}')
+
+    send_mail(
+        subject='Reset Password SecureCloud',
+        message=(
+            'Kami menerima permintaan reset password untuk akun SecureCloud Anda.\n\n'
+            f'Klik link berikut untuk membuat password baru (berlaku {RESET_TOKEN_TTL_MINUTES} menit):\n'
+            f'{reset_link}\n\n'
+            'Jika Anda tidak meminta reset password, abaikan saja email ini.'
+        ),
+        from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'no-reply@securecloud.local'),
+        recipient_list=[email],
+        fail_silently=False,
+    )
+
+
+@csrf_exempt
+@require_http_methods(['POST'])
+def forgot_password_view(request):
+    """Tahap 1: user submit email -> kalau terdaftar, kirim link reset."""
+    payload, err = _parse_json(request)
+    if err:
+        return err
+
+    email = (payload.get('email') or '').strip().lower()
+
+    if not email or '@' not in email:
+        return JsonResponse({'success': False, 'message': 'Email tidak valid'}, status=400)
+
+    result = supabase.table('users').select('*').eq('email', email).execute()
+
+    # 🔒 Selalu balas sukses walau email tidak ditemukan (mencegah orang lain
+    # menebak-nebak email mana saja yang terdaftar di sistem kita / user enumeration).
+    generic_response = JsonResponse({
+        'success': True,
+        'message': 'Jika email terdaftar, link reset password sudah dikirim. Silakan cek inbox Anda.',
+    })
+
+    if not result.data:
+        return generic_response
+
+    user = result.data[0]
+
+    token = secrets.token_urlsafe(32)
+    expiry = (datetime.utcnow() + timedelta(minutes=RESET_TOKEN_TTL_MINUTES)).isoformat()
+
+    supabase.table('users').update({
+        'reset_token': token,
+        'reset_token_expiry': expiry,
+    }).eq('id', user['id']).execute()
+
+    try:
+        _send_reset_email(request, email, token)
+    except Exception as e:
+        # Token sudah kadung disimpan; tetap balas generik ke user, tapi log errornya.
+        print(f'❌ Gagal mengirim email reset password ke {email}: {e}')
+
+    return generic_response
+
+
+@csrf_exempt
+@require_http_methods(['POST'])
+def reset_password_view(request):
+    """Tahap 2: user klik link dari email, submit token + password baru."""
+    payload, err = _parse_json(request)
+    if err:
+        return err
+
+    token = (payload.get('token') or '').strip()
+    new_password = payload.get('new_password') or ''
+    new_password_confirm = payload.get('new_password_confirm') or ''
+
+    if not token:
+        return JsonResponse({'success': False, 'message': 'Token reset tidak ditemukan'}, status=400)
+
+    if len(new_password) < 8:
+        return JsonResponse({'success': False, 'message': 'Password minimal 8 karakter'}, status=400)
+
+    if new_password != new_password_confirm:
+        return JsonResponse({'success': False, 'message': 'Konfirmasi password tidak cocok'}, status=400)
+
+    result = supabase.table('users').select('*').eq('reset_token', token).execute()
+
+    if not result.data:
+        return JsonResponse({'success': False, 'message': 'Link reset tidak valid atau sudah digunakan'}, status=400)
+
+    user = result.data[0]
+
+    expiry_raw = user.get('reset_token_expiry')
+    if not expiry_raw:
+        return JsonResponse({'success': False, 'message': 'Link reset tidak valid'}, status=400)
+
+    expiry = datetime.fromisoformat(expiry_raw)
+    if datetime.utcnow() > expiry:
+        return JsonResponse({'success': False, 'message': 'Link reset sudah kedaluwarsa. Silakan minta link baru.'}, status=400)
+
+    hashed_password = make_password(new_password)
+
+    supabase.table('users').update({
+        'password': hashed_password,
+        'reset_token': None,
+        'reset_token_expiry': None,
+    }).eq('id', user['id']).execute()
+
+    # Sinkronkan juga password di Django User (SQLite) kalau sudah pernah dibuat,
+    # supaya tidak ada data yang basi walau login_view tidak mengandalkan field ini.
+    from django.contrib.auth.models import User
+    try:
+        django_user = User.objects.get(username=user['username'])
+        django_user.password = hashed_password
+        django_user.save()
+    except User.DoesNotExist:
+        pass
+
+    return JsonResponse({'success': True, 'message': 'Password berhasil diubah. Silakan login dengan password baru.'})
