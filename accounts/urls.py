@@ -9,6 +9,8 @@ urlpatterns = [
     path('logout/', views.logout_view, name='api-logout'),
     path('csrf-token/', views.csrf_token_view, name='api-csrf-token'),
     path('current-user/', views.current_user_view, name='api-current-user'),
+    path('forgot-password/', views.forgot_password_view, name='api-forgot-password'),
+    path('reset-password/', views.reset_password_view, name='api-reset-password'),
 
     # dashboard.js memanggil endpoint file di /api/accounts/files/...,
     # jadi didaftarkan (nested) di sini, bukan sebagai prefix /api/files/ terpisah.
