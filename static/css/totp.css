@@ -78,68 +78,26 @@ body::before {
 .circle {
     position: absolute;
     border-radius: 50%;
-    background: rgba(37, 99, 235, 0.04);
-    animation: floatCircle 20s ease-in-out infinite;
+    background: rgba(37, 99, 235, 0.05);
 }
 
 .circle-1 {
-    width: 250px;
-    height: 250px;
-    top: -80px;
-    left: -80px;
-    animation-delay: 0s;
+    width: 280px;
+    height: 280px;
+    top: -100px;
+    left: -100px;
 }
 
 .circle-2 {
-    width: 300px;
-    height: 300px;
-    bottom: -100px;
-    right: -100px;
-    animation-delay: 5s;
-    background: rgba(124, 58, 237, 0.03);
+    width: 320px;
+    height: 320px;
+    bottom: -120px;
+    right: -120px;
+    background: rgba(124, 58, 237, 0.04);
 }
 
-.circle-3 {
-    width: 150px;
-    height: 150px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    animation-delay: 10s;
-    background: rgba(37, 99, 235, 0.025);
-}
-
-.circle-4 {
-    width: 100px;
-    height: 100px;
-    top: 15%;
-    right: 8%;
-    animation-delay: 3s;
-    background: rgba(124, 58, 237, 0.03);
-}
-
-.circle-5 {
-    width: 180px;
-    height: 180px;
-    bottom: 15%;
-    left: 5%;
-    animation-delay: 7s;
-    background: rgba(37, 99, 235, 0.025);
-}
-
-@keyframes floatCircle {
-    0%, 100% {
-        transform: translate(0, 0) scale(1);
-    }
-    25% {
-        transform: translate(25px, -25px) scale(1.05);
-    }
-    50% {
-        transform: translate(-15px, 15px) scale(0.95);
-    }
-    75% {
-        transform: translate(15px, 20px) scale(1.02);
-    }
+.circle-3, .circle-4, .circle-5 {
+    display: none;
 }
 
 /* ============================================
@@ -167,66 +125,6 @@ body::before {
     position: relative;
     overflow: visible;
     transition: var(--transition);
-}
-
-.totp-box:hover {
-    box-shadow: var(--shadow-hover);
-    transform: translateY(-3px);
-}
-
-.totp-box::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, transparent 50%);
-    pointer-events: none;
-    border-radius: var(--radius);
-}
-
-/* ============================================
-   DEKORASI SUDUT
-   ============================================ */
-.corner-deco {
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    border: 1.5px solid rgba(37, 99, 235, 0.08);
-    pointer-events: none;
-}
-
-.corner-tl {
-    top: 10px;
-    left: 10px;
-    border-right: none;
-    border-bottom: none;
-    border-radius: 3px 0 0 0;
-}
-
-.corner-tr {
-    top: 10px;
-    right: 10px;
-    border-left: none;
-    border-bottom: none;
-    border-radius: 0 3px 0 0;
-}
-
-.corner-bl {
-    bottom: 10px;
-    left: 10px;
-    border-right: none;
-    border-top: none;
-    border-radius: 0 0 0 3px;
-}
-
-.corner-br {
-    bottom: 10px;
-    right: 10px;
-    border-left: none;
-    border-top: none;
-    border-radius: 0 0 3px 0;
 }
 
 /* ============================================
@@ -275,16 +173,6 @@ body::before {
     box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
     position: relative;
     z-index: 2;
-    animation: floatIcon 3s ease-in-out infinite;
-}
-
-@keyframes floatIcon {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-6px);
-    }
 }
 
 .icon-ring {
@@ -295,18 +183,6 @@ body::before {
     height: 66px;
     border-radius: 50%;
     border: 2px solid rgba(37, 99, 235, 0.12);
-    animation: pulseRing 2s ease-in-out infinite;
-}
-
-@keyframes pulseRing {
-    0%, 100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    50% {
-        transform: scale(1.08);
-        opacity: 0.5;
-    }
 }
 
 /* ============================================
@@ -583,29 +459,7 @@ body::before {
     overflow: hidden;
 }
 
-.btn-totp::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(
-        45deg,
-        transparent 30%,
-        rgba(255, 255, 255, 0.1) 50%,
-        transparent 70%
-    );
-    transform: rotate(45deg) translateX(-100%);
-    transition: 0.6s;
-}
-
-.btn-totp:hover::before {
-    transform: rotate(45deg) translateX(100%);
-}
-
 .btn-totp:hover {
-    transform: translateY(-2px);
     box-shadow: 0 6px 24px rgba(37, 99, 235, 0.35);
 }
 
@@ -800,82 +654,113 @@ body::before {
    ============================================ */
 #alertContainer {
     position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 9999;
-    width: 90%;
-    max-width: 400px;
+    top: 24px;
+    right: 24px;
+    z-index: 99999;
+    max-width: 380px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    pointer-events: none;
 }
 
-.alert {
-    padding: 10px 16px;
-    border-radius: var(--radius-sm);
-    margin-bottom: 8px;
+#alertContainer .alert {
+    pointer-events: auto;
+    padding: 14px 18px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     gap: 10px;
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
-    animation: slideDown 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    font-family: 'Inter', sans-serif;
     font-size: 0.85rem;
+    font-weight: 500;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.10);
+    animation: slideIn 0.3s ease forwards;
+    border-left: 3px solid;
 }
 
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-20px) scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
 }
 
-.alert-success {
-    background: rgba(16, 185, 129, 0.12);
-    color: #065F46;
-    border-left: 3px solid var(--success);
+@keyframes slideOut {
+    from { opacity: 1; transform: translateX(0); }
+    to { opacity: 0; transform: translateX(20px); }
 }
 
-.alert-danger {
-    background: rgba(239, 68, 68, 0.12);
-    color: #991B1B;
-    border-left: 3px solid var(--danger);
+#alertContainer .alert.hide {
+    animation: slideOut 0.25s ease forwards;
 }
 
-.alert-warning {
-    background: rgba(245, 158, 11, 0.12);
-    color: #78350F;
-    border-left: 3px solid var(--warning);
+/* Types */
+#alertContainer .alert-success {
+    background: #ecfdf5;
+    border-left-color: #10b981;
+    color: #065f46;
 }
 
-.alert-info {
-    background: rgba(59, 130, 246, 0.12);
-    color: #1E40AF;
-    border-left: 3px solid #3B82F6;
+#alertContainer .alert-danger {
+    background: #fef2f2;
+    border-left-color: #ef4444;
+    color: #991b1b;
 }
 
-.alert-icon {
+#alertContainer .alert-warning {
+    background: #fffbeb;
+    border-left-color: #f59e0b;
+    color: #78350f;
+}
+
+#alertContainer .alert-info {
+    background: #eff6ff;
+    border-left-color: #3b82f6;
+    color: #1e40af;
+}
+
+/* Icons */
+#alertContainer .alert i {
     font-size: 1rem;
     flex-shrink: 0;
 }
 
-.alert-close {
+#alertContainer .alert-success i { color: #10b981; }
+#alertContainer .alert-danger i { color: #ef4444; }
+#alertContainer .alert-warning i { color: #f59e0b; }
+#alertContainer .alert-info i { color: #3b82f6; }
+
+/* Close button */
+#alertContainer .alert .close {
     margin-left: auto;
     background: none;
     border: none;
-    font-size: 1rem;
-    cursor: pointer;
     color: inherit;
-    opacity: 0.5;
-    transition: var(--transition);
-    padding: 0 4px;
+    opacity: 0.4;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 2px 4px;
 }
 
-.alert-close:hover {
-    opacity: 1;
+#alertContainer .alert .close:hover {
+    opacity: 0.8;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    #alertContainer {
+        top: 16px;
+        right: 16px;
+        left: 16px;
+        max-width: none;
+        width: auto;
+    }
+    
+    #alertContainer .alert {
+        padding: 12px 14px;
+        font-size: 0.8rem;
+        border-radius: 8px;
+    }
 }
 
 /* ============================================
@@ -941,11 +826,6 @@ body::before {
         font-size: 0.5rem;
         padding: 3px 10px;
         margin-bottom: 8px;
-    }
-    
-    .corner-deco {
-        width: 24px;
-        height: 24px;
     }
     
     .step-number {
