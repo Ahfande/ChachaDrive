@@ -134,7 +134,7 @@ def verify_totp_setup_view(request):
         return JsonResponse({'success': False, 'message': '2FA sudah aktif'}, status=400)
 
     totp = pyotp.TOTP(user['totp_secret'])
-    if not totp.verify(token, valid_window=1):
+    if not totp.verify(token, valid_window=0):
         return JsonResponse({'success': False, 'message': 'Kode TOTP tidak valid'}, status=400)
 
     # Update user di Supabase
@@ -206,7 +206,7 @@ def login_view(request):
 
     # Tahap 2: verifikasi TOTP
     totp = pyotp.TOTP(user['totp_secret'])
-    if not totp.verify(totp_code, valid_window=1):
+    if not totp.verify(totp_code, valid_window=0):
         return JsonResponse({'success': False, 'message': 'Kode TOTP tidak valid'}, status=400)
 
     # 🔥 CARI ATAU BUAT DJANGO USER DI SQLITE
