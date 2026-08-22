@@ -340,22 +340,15 @@ let timeLeft = 30;
 
 function startTimer() {
     if (timerInterval) clearInterval(timerInterval);
-    timeLeft = 30;
-    updateTimerDisplay();
     
-    timerInterval = setInterval(function() {
-        timeLeft--;
+    function tick() {
+        const now = Math.floor(Date.now() / 1000);
+        timeLeft = 30 - (now % 30);
         updateTimerDisplay();
-        if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            // Reset timer after 1 second
-            setTimeout(function() {
-                timeLeft = 30;
-                updateTimerDisplay();
-                startTimer();
-            }, 1000);
-        }
-    }, 1000);
+    }
+    
+    tick();
+    timerInterval = setInterval(tick, 1000);
 }
 
 function updateTimerDisplay() {
