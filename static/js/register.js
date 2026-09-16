@@ -1,5 +1,5 @@
 /**
- * REGISTER.JS - Terintegrasi dengan Backend Django
+ * REGISTER.js - Terintegrasi dengan Backend Django
  */
 
 const API_BASE_URL = window.location.origin + '/api';
