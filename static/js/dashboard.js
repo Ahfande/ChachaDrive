@@ -67,6 +67,22 @@ const ownerEmail = currentUser.email;
     const AUDIO_EXT = ['mp3', 'wav', 'ogg', 'm4a'];
     const VIDEO_EXT = ['mp4', 'webm', 'mov', 'mkv'];
 
+    // ============================================
+    // BATAS UPLOAD & JENIS FILE YANG DIDUKUNG
+    // (ubah di sini saja kalau batasnya berubah)
+    // ============================================
+    const MAX_FILE_SIZE = 5 * 1024 * 1024;   // 5 MB per file
+    const MAX_FILE_SIZE_LABEL = '5 MB';
+    const ALLOWED_EXT_LABEL = 'DOCX, PDF, TXT, PNG, JPG';
+
+    const ALLOWED_EXT = [
+        'docx',          // Dokumen Word
+        'pdf',           // Dokumen PDF
+        'txt',           // Teks biasa
+        'png',           // Gambar PNG
+        'jpg', 'jpeg'    // Gambar JPG (.jpeg adalah format yang sama)
+    ];
+
     const ICON_MAP = {
         pdf: { icon: 'fa-file-pdf', color: '#EF4444' },
         doc: { icon: 'fa-file-word', color: '#2563EB' },
@@ -416,6 +432,52 @@ async function editFileOnServer(fileId, newCiphertextBase64, newNonce) {
 }
 
     // ============================================
+    // VALIDASI FILE SEBELUM UPLOAD
+    // ============================================
+    /**
+     * Mengecek satu file terhadap batas ukuran dan daftar format yang didukung.
+     * Mengembalikan { ok: true } atau { ok: false, reason, message }.
+     */
+    function validateFile(file) {
+        const ext = getExt(file.name);
+
+        if (!ext) {
+            return {
+                ok: false,
+                reason: 'no_ext',
+                message: 'Gagal: "' + file.name + '" tidak memiliki ekstensi sehingga jenis filenya tidak dapat dikenali.'
+            };
+        }
+
+        if (!ALLOWED_EXT.includes(ext)) {
+            return {
+                ok: false,
+                reason: 'type',
+                message: 'Gagal: format .' + ext + ' tidak didukung. Hanya ' + ALLOWED_EXT_LABEL + ' yang dapat diunggah.'
+            };
+        }
+
+        if (file.size === 0) {
+            return {
+                ok: false,
+                reason: 'empty',
+                message: 'Gagal: "' + file.name + '" berukuran 0 byte (file kosong) dan tidak dapat diunggah.'
+            };
+        }
+
+        if (file.size > MAX_FILE_SIZE) {
+            return {
+                ok: false,
+                reason: 'size',
+                message: 'Gagal: ukuran "' + file.name + '" adalah ' + formatBytes(file.size) +
+                         ', melebihi batas maksimal ' + MAX_FILE_SIZE_LABEL + ' per file.'
+            };
+        }
+
+        return { ok: true };
+    }
+
+    // ============================================
     // UPLOAD FILE
     // ============================================
     function renderUploadQueueItem(id, name, iconMeta) {
@@ -444,7 +506,40 @@ async function editFileOnServer(fileId, newCiphertextBase64, newNonce) {
         const files = Array.from(fileList);
         if (files.length === 0) return;
 
+        // --- Saring dulu: mana yang lolos, mana yang ditolak ---
+        const accepted = [];
+        const rejected = [];
+
         for (const file of files) {
+            const check = validateFile(file);
+            if (check.ok) {
+                accepted.push(file);
+            } else {
+                rejected.push({ file: file, check: check });
+            }
+        }
+
+        // --- Tampilkan file yang ditolak di antrean + notifikasi ---
+        rejected.forEach(function (item) {
+            const el = renderUploadQueueItem(uuid(), item.file.name, iconFor(getExt(item.file.name)));
+            setUploadStatus(el, item.check.message, 100, 'error');
+            setTimeout(function () { el.remove(); }, 10000);
+        });
+
+        if (rejected.length === 1) {
+            showAlert('danger', rejected[0].check.message, 7000);
+        } else if (rejected.length > 1) {
+            showAlert(
+                'danger',
+                rejected.length + ' file ditolak. Maksimal ' + MAX_FILE_SIZE_LABEL +
+                ' per file dan hanya format ' + ALLOWED_EXT_LABEL + '.',
+                7000
+            );
+        }
+
+        if (accepted.length === 0) return;
+
+        for (const file of accepted) {
             await uploadSingleFile(file);
         }
         await refreshFiles();
@@ -453,6 +548,17 @@ async function editFileOnServer(fileId, newCiphertextBase64, newNonce) {
     async function uploadSingleFile(file) {
         const id = uuid();
         const ext = getExt(file.name);
+
+        // Pengaman ganda: jangan pernah mengenkripsi file yang tidak lolos validasi.
+        const guard = validateFile(file);
+        if (!guard.ok) {
+            const rejectEl = renderUploadQueueItem(id, file.name, iconFor(ext));
+            setUploadStatus(rejectEl, guard.message, 100, 'error');
+            setTimeout(function () { rejectEl.remove(); }, 10000);
+            showAlert('danger', guard.message, 7000);
+            return;
+        }
+
         const queueEl = renderUploadQueueItem(id, file.name, iconFor(ext));
 
         try {
@@ -1132,7 +1238,7 @@ function cleanupThumbnails() {
     // ============================================
     // ALERT
     // ============================================
-function showAlert(type, message) {
+function showAlert(type, message, duration) {
     const container = document.getElementById('alertContainer');
     if (!container) return;
     
@@ -1165,13 +1271,13 @@ function showAlert(type, message) {
         setTimeout(() => alert.remove(), 300);
     });
     
-    // Auto close 3 detik
+    // Auto close (default 3 detik, pesan error bisa lebih lama)
     setTimeout(() => {
         if (alert.parentElement) {
             alert.classList.add('hide');
             setTimeout(() => alert.remove(), 300);
         }
-    }, 3000);
+    }, duration || 3000);
 }
 
     // ============================================
@@ -1421,6 +1527,54 @@ if (btnLogout) {
     }
 
     // ============================================
+    // INFO BATAS UPLOAD & PANDUAN PENGGUNA
+    // ============================================
+    function initUploadLimitUi() {
+        // Filter bawaan browser pada dialog pilih file
+        const fileInput = document.getElementById('fileInput');
+        if (fileInput) {
+            fileInput.setAttribute('accept', ALLOWED_EXT.map(function (e) { return '.' + e; }).join(','));
+        }
+
+        // Isi otomatis semua label batas ukuran di halaman
+        document.querySelectorAll('[data-max-size]').forEach(function (el) {
+            el.textContent = MAX_FILE_SIZE_LABEL;
+        });
+
+        // Isi otomatis daftar format yang didukung
+        document.querySelectorAll('[data-allowed-ext]').forEach(function (el) {
+            el.textContent = ALLOWED_EXT_LABEL;
+        });
+    }
+
+    function initHelpUi() {
+        ['btnHelp', 'btnHelpSidebar', 'btnHelpInline'].forEach(function (id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();   // supaya klik di dropzone tidak ikut membuka dialog file
+                openModal('helpModal');
+            });
+        });
+
+        const btnHelpDone = document.getElementById('helpDoneBtn');
+        if (btnHelpDone) {
+            btnHelpDone.addEventListener('click', function () {
+                try { localStorage.setItem('sc_help_seen', '1'); } catch (err) { /* abaikan */ }
+                closeModal('helpModal');
+            });
+        }
+
+        // Tampilkan panduan otomatis pada kunjungan pertama
+        try {
+            if (!localStorage.getItem('sc_help_seen')) {
+                setTimeout(function () { openModal('helpModal'); }, 600);
+            }
+        } catch (err) { /* localStorage diblokir, abaikan */ }
+    }
+
+    // ============================================
     // INIT USER UI
     // ============================================
     function initUserUi() {
@@ -1494,6 +1648,8 @@ if (btnLogout) {
         
         initUserUi();
         initEvents();
+        initUploadLimitUi();
+        initHelpUi();
         await refreshFiles();
         
         console.log('✅ Dashboard ready');
