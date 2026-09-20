@@ -61,6 +61,17 @@
                     <span>ChaCha20-Poly1305</span>
                 </div>
                 <p class="security-note">Setiap file dienkripsi di perangkat Anda sebelum diunggah ke penyimpanan cloud.</p>
+
+                <div class="upload-rules-box">
+                    <div class="upload-rules-title"><i class="fas fa-circle-info"></i> Ketentuan Unggah</div>
+                    <ul class="upload-rules-list">
+                        <li>Ukuran maksimal <strong data-max-size>5 MB</strong> per file</li>
+                        <li>Format: <strong data-allowed-ext>DOCX, PDF, TXT, PNG, JPG</strong></li>
+                    </ul>
+                    <button type="button" class="btn-help-link" id="btnHelpSidebar">
+                        <i class="fas fa-circle-question"></i> Panduan Penggunaan
+                    </button>
+                </div>
             </div>
 
             <div class="storage-widget">
@@ -94,6 +105,9 @@
                 </div>
 
                 <div class="topbar-right">
+                    <button class="btn-icon-round btn-help-round" id="btnHelp" aria-label="Panduan Penggunaan" title="Panduan Penggunaan">
+                        <i class="fas fa-circle-question"></i>
+                    </button>
                     <div class="user-menu" id="userMenu">
                         <button class="user-trigger" id="userTrigger">
                             <span class="user-avatar" id="userAvatar">U</span>
@@ -124,6 +138,11 @@
                     <i class="fas fa-cloud-upload-alt"></i>
                     <p><strong>Seret &amp; letakkan file di sini</strong> atau klik tombol Unggah File</p>
                     <span>File akan dienkripsi secara otomatis menggunakan ChaCha20-Poly1305 sebelum disimpan</span>
+                    <div class="dropzone-rules">
+                        <span class="rule-chip"><i class="fas fa-weight-hanging"></i> Maksimal <strong data-max-size>5 MB</strong> per file</span>
+                        <span class="rule-chip"><i class="fas fa-file-circle-check"></i> Format: <strong data-allowed-ext>DOCX, PDF, TXT, PNG, JPG</strong></span>
+                        <a href="#" class="rule-chip rule-chip-link" id="btnHelpInline"><i class="fas fa-circle-question"></i> Lihat panduan lengkap</a>
+                    </div>
                 </div>
 
                 <div class="content-toolbar">
@@ -259,6 +278,82 @@
                 <div class="modal-footer-actions">
                     <button class="btn-secondary" data-close="deleteModal">Batal</button>
                     <button class="btn-danger" id="confirmDeleteBtn"><i class="fas fa-trash-alt"></i> Hapus</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         MODAL: PANDUAN PENGGUNAAN
+    ============================================ -->
+    <div class="modal-overlay" id="helpModal">
+        <div class="modal modal-help">
+            <div class="modal-header">
+                <div class="modal-title-group">
+                    <i class="fas fa-circle-question modal-lock-icon"></i>
+                    <span class="modal-title">Panduan Penggunaan SecureCloud</span>
+                </div>
+                <button class="modal-close" data-close="helpModal"><i class="fas fa-times"></i></button>
+            </div>
+
+            <div class="modal-body help-body">
+
+                <!-- Peringatan utama -->
+                <div class="help-alert help-alert-warning">
+                    <i class="fas fa-triangle-exclamation"></i>
+                    <div>
+                        <strong>Perhatian sebelum mengunggah</strong>
+                        <p>Ukuran maksimal <strong data-max-size>5 MB</strong> per file, dan hanya format
+                        <strong data-allowed-ext>DOCX, PDF, TXT, PNG, JPG</strong> yang dapat diunggah. File yang melebihi
+                        batas atau berformat lain akan otomatis ditolak dan tidak tersimpan.</p>
+                    </div>
+                </div>
+
+                <!-- Langkah penggunaan -->
+                <h4 class="help-heading"><i class="fas fa-list-ol"></i> Cara Mengunggah File</h4>
+                <ol class="help-steps">
+                    <li><strong>Pilih file.</strong> Klik tombol <em>Unggah File</em> di sidebar, atau seret file langsung ke kotak putus-putus di halaman utama.</li>
+                    <li><strong>Tunggu proses enkripsi.</strong> File dienkripsi di perangkat Anda dengan ChaCha20-Poly1305 sebelum dikirim, sehingga server tidak pernah menerima file aslinya.</li>
+                    <li><strong>File muncul di daftar.</strong> Klik kartu file untuk melihat isinya, atau gunakan ikon titik tiga untuk mengunduh dan menghapus.</li>
+                </ol>
+
+                <!-- Batasan -->
+                <h4 class="help-heading"><i class="fas fa-shield-halved"></i> Batasan &amp; Format yang Didukung</h4>
+                <div class="help-limit-grid">
+                    <div class="help-limit-card">
+                        <div class="limit-label">Ukuran maksimal</div>
+                        <div class="limit-value" data-max-size>5 MB</div>
+                        <div class="limit-note">per file, berlaku untuk semua jenis file</div>
+                    </div>
+                    <div class="help-limit-card">
+                        <div class="limit-label">Total penyimpanan</div>
+                        <div class="limit-value">1 GB</div>
+                        <div class="limit-note">terlihat pada indikator di sidebar</div>
+                    </div>
+                </div>
+
+                <table class="help-format-table">
+                    <thead>
+                        <tr><th>Kategori</th><th>Format yang didukung</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><i class="fas fa-file-word"></i> Dokumen Word</td><td>.docx</td></tr>
+                        <tr><td><i class="fas fa-file-pdf"></i> Dokumen PDF</td><td>.pdf</td></tr>
+                        <tr><td><i class="fas fa-file-lines"></i> Teks</td><td>.txt</td></tr>
+                        <tr><td><i class="fas fa-image"></i> Gambar</td><td>.png, .jpg (termasuk .jpeg)</td></tr>
+                    </tbody>
+                </table>
+
+                <p class="help-muted">Hanya kelima format di atas yang diterima. Format lain, misalnya
+                <em>.zip</em>, <em>.mp4</em>, <em>.xlsx</em>, atau <em>.exe</em>, akan ditolak dengan notifikasi merah
+                di pojok layar dan tidak ikut tersimpan.</p>
+
+            </div>
+
+            <div class="modal-footer">
+                <span class="preview-meta">Panduan ini dapat dibuka lagi melalui ikon <i class="fas fa-circle-question"></i> di kanan atas</span>
+                <div class="modal-footer-actions">
+                    <button class="btn-primary" id="helpDoneBtn"><i class="fas fa-check"></i> Mengerti</button>
                 </div>
             </div>
         </div>
