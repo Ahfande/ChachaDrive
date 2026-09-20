@@ -49,6 +49,26 @@
             <h2 class="register-title">Buat Akun Baru</h2>
             <p class="register-subtitle">Daftar ke SecureCloud dan mulai menyimpan data dengan aman</p>
 
+            <!-- Panduan pendaftaran untuk pengguna awam -->
+            <div class="help-note-box help-note-top">
+                <i class="fas fa-circle-info"></i>
+                <div>
+                    <strong>Yang perlu Anda siapkan</strong>
+                    <p>Setelah mengisi formulir ini, Anda akan diminta mengaktifkan <strong>verifikasi dua faktor (2FA)</strong>
+                    dengan memindai QR Code. Jadi siapkan ponsel dan pasang dulu aplikasi autentikator gratis berikut:</p>
+                    <div class="help-app-links">
+                        <a class="app-link" href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank" rel="noopener">
+                            <i class="fab fa-google-play"></i>
+                            <span><strong>Google Authenticator</strong><small>Android — Play Store</small></span>
+                        </a>
+                        <a class="app-link" href="https://apps.apple.com/app/google-authenticator/id388497605" target="_blank" rel="noopener">
+                            <i class="fab fa-app-store-ios"></i>
+                            <span><strong>Google Authenticator</strong><small>iPhone — App Store</small></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
             <!-- register.html - bagian form -->
             <form method="POST" id="registerForm">
                 <!-- {% csrf_token %} -->
@@ -123,6 +143,28 @@
                     <span class="spinner" id="btnSpinner" style="display: none;"></span>
                 </button>
             </form>
+
+            <!-- Langkah setelah mendaftar -->
+            <details class="help-accordion">
+                <summary>
+                    <i class="fas fa-circle-question"></i>
+                    <span>Apa yang terjadi setelah saya mendaftar?</span>
+                    <i class="fas fa-chevron-down accordion-arrow"></i>
+                </summary>
+                <div class="help-accordion-body">
+                    <ol class="help-steps-mini">
+                        <li>Halaman <strong>Aktivasi 2FA</strong> terbuka dan menampilkan QR Code.</li>
+                        <li>Buka aplikasi autentikator di ponsel, pilih <em>tambah akun</em>, lalu <strong>pindai QR Code</strong> tersebut.</li>
+                        <li>Masukkan <strong>kode 6 digit</strong> yang muncul di aplikasi untuk menyelesaikan aktivasi.</li>
+                        <li>Selesai. Setiap kali masuk, Anda memasukkan password dan kode 6 digit tersebut.</li>
+                    </ol>
+                    <p class="help-mini-note">
+                        <i class="fas fa-triangle-exclamation"></i>
+                        Catatan unggah file: ukuran maksimal <strong>5 MB</strong> per file, dan hanya format
+                        <strong>DOCX, PDF, TXT, PNG, JPG</strong> yang dapat diunggah.
+                    </p>
+                </div>
+            </details>
 
             <!-- Divider -->
             <div class="divider">
