@@ -49,7 +49,39 @@
             <p class="totp-subtitle">Aktifkan autentikasi dua faktor (2FA) untuk memberikan lapisan keamanan tambahan
                 pada akun Anda.</p>
 
-            <!-- Step 1: Scan QR Code -->
+            <!-- Step 1: Unduh aplikasi autentikator -->
+            <div class="setup-step">
+                <div class="step-head">
+                    <span class="step-num">1</span>
+                    <div>
+                        <strong>Pasang aplikasi autentikator di ponsel</strong>
+                        <small>Aplikasi ini yang menghasilkan kode 6 digit. Gratis dan hanya dipasang sekali.</small>
+                    </div>
+                </div>
+                <div class="help-app-links">
+                    <a class="app-link" href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank" rel="noopener">
+                        <i class="fab fa-google-play"></i>
+                        <span><strong>Google Authenticator</strong><small>Android — Play Store</small></span>
+                    </a>
+                    <a class="app-link" href="https://apps.apple.com/app/google-authenticator/id388497605" target="_blank" rel="noopener">
+                        <i class="fab fa-app-store-ios"></i>
+                        <span><strong>Google Authenticator</strong><small>iPhone — App Store</small></span>
+                    </a>
+                </div>
+                <p class="step-alt">Aplikasi lain seperti Microsoft Authenticator atau Authy juga dapat digunakan.</p>
+            </div>
+
+            <!-- Step 2: Scan QR Code -->
+            <div class="setup-step">
+                <div class="step-head">
+                    <span class="step-num">2</span>
+                    <div>
+                        <strong>Pindai QR Code di bawah ini</strong>
+                        <small>Buka aplikasi &rarr; tekan tombol <em>+</em> (tambah akun) &rarr; pilih <em>Pindai kode QR</em>.</small>
+                    </div>
+                </div>
+            </div>
+
             <div class="qr-container">
                 <div class="qr-code" id="qrCodeContainer">
                     <img id="qrCodeImg" src="" alt="QR Code" style="display: none;">
@@ -67,6 +99,17 @@
                         </button>
                     </div>
                     <small>Simpan kode ini di tempat aman sebagai cadangan</small>
+                </div>
+            </div>
+
+            <!-- Step 3: Masukkan kode -->
+            <div class="setup-step">
+                <div class="step-head">
+                    <span class="step-num">3</span>
+                    <div>
+                        <strong>Masukkan kode 6 digit dari aplikasi</strong>
+                        <small>Kode berganti setiap 30 detik. Masukkan kode yang sedang tampil saat ini.</small>
+                    </div>
                 </div>
             </div>
 
