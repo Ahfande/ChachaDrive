@@ -931,3 +931,324 @@ body::before {
 .verify-box .totp-subtitle {
     margin-bottom: 12px;
 }
+/* ============================================
+   KOMPONEN PANDUAN PENGGUNA (tambahan revisi)
+   ============================================ */
+
+/* --- Akordeon bantuan --- */
+.help-accordion {
+    margin-top: 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: rgba(248, 250, 252, 0.8);
+    overflow: hidden;
+}
+
+.help-accordion summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 14px;
+    cursor: pointer;
+    list-style: none;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--primary);
+    transition: var(--transition);
+}
+
+.help-accordion summary::-webkit-details-marker {
+    display: none;
+}
+
+.help-accordion summary:hover {
+    background: var(--primary-bg);
+}
+
+.help-accordion summary > span {
+    flex: 1;
+}
+
+.accordion-arrow {
+    font-size: 0.7rem;
+    transition: transform 0.3s ease;
+}
+
+.help-accordion[open] .accordion-arrow {
+    transform: rotate(180deg);
+}
+
+.help-accordion-body {
+    padding: 4px 14px 14px;
+    border-top: 1px solid var(--border);
+}
+
+/* --- Daftar langkah ringkas --- */
+.help-steps-mini {
+    margin: 12px 0 0;
+    padding-left: 18px;
+}
+
+.help-steps-mini li {
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+    margin-bottom: 7px;
+}
+
+.help-steps-mini strong {
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+.help-mini-note {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    font-size: 0.74rem;
+    line-height: 1.55;
+    color: var(--text-muted);
+}
+
+.help-mini-note i {
+    color: #F59E0B;
+    margin-top: 2px;
+}
+
+.help-mini-note strong {
+    color: var(--text-dark);
+}
+
+/* --- Kotak catatan --- */
+.help-note-box {
+    display: flex;
+    gap: 11px;
+    margin-top: 14px;
+    padding: 13px 15px;
+    border-radius: var(--radius-sm);
+    background: var(--primary-bg);
+    border: 1px solid rgba(37, 99, 235, 0.18);
+    text-align: left;
+}
+
+.help-note-box > i {
+    font-size: 1rem;
+    color: var(--primary);
+    margin-top: 2px;
+}
+
+.help-note-box strong {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+
+.help-note-box p {
+    font-size: 0.76rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.help-note-top {
+    margin: 0 0 18px;
+}
+
+/* --- Tautan unduh aplikasi autentikator --- */
+.help-app-links {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.app-link {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 9px 11px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: #fff;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.app-link:hover {
+    border-color: var(--primary);
+    background: var(--primary-bg);
+    transform: translateY(-2px);
+}
+
+.app-link > i {
+    font-size: 1.2rem;
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+.app-link span {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+    min-width: 0;
+}
+
+.app-link strong {
+    font-size: 0.74rem;
+    color: var(--text-dark);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.app-link small {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+}
+
+@media (max-width: 480px) {
+    .help-app-links {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --- Langkah setup 2FA --- */
+.setup-step {
+    text-align: left;
+    margin-top: 16px;
+}
+
+.step-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.step-num {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--primary-gradient);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.step-head strong {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--text-dark);
+    margin-bottom: 2px;
+}
+
+.step-head small {
+    display: block;
+    font-size: 0.72rem;
+    line-height: 1.55;
+    color: var(--text-muted);
+}
+
+.step-alt {
+    margin-top: 8px;
+    font-size: 0.68rem;
+    color: var(--text-light);
+    text-align: center;
+}
+
+/* ============================================
+   PERBAIKAN LAYOUT (revisi)
+   - Halaman bisa di-scroll saat konten panjang
+   - Kartu unduh aplikasi tidak melebihi lebar kotak
+   ============================================ */
+
+/* --- 1. Scroll vertikal --- */
+html {
+    overflow-y: auto;
+}
+
+body {
+    overflow-x: hidden;
+    overflow-y: auto;
+    align-items: flex-start;   /* cegah bagian atas terpotong saat konten tinggi */
+    height: auto;
+}
+
+/* margin auto menengahkan kotak saat layar masih longgar,
+   tanpa memotong bagian atas saat konten lebih tinggi dari layar */
+.container {
+    margin: auto;
+}
+
+/* --- 2. Cegah konten panduan meluber ke samping --- */
+.help-note-box,
+.help-accordion,
+.help-accordion-body,
+.setup-step {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.help-note-box > div {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.help-note-box p,
+.help-accordion-body p,
+.help-steps-mini li {
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.help-app-links {
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    width: 100%;
+}
+
+.app-link {
+    min-width: 0;
+    overflow: hidden;
+}
+
+.app-link span {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.app-link strong,
+.app-link small {
+    display: block;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Pada layar sempit, satu kartu per baris agar teks utuh */
+@media (max-width: 640px) {
+    .help-app-links {
+        grid-template-columns: 1fr;
+    }
+
+    .app-link strong,
+    .app-link small {
+        white-space: normal;
+    }
+}
+
+/* --- 3. Kotak utama boleh tumbuh ke bawah --- */
+.login-box,
+.register-box,
+.totp-box {
+    overflow: visible;
+}
